@@ -43,7 +43,8 @@ st.markdown("""
 
 .block-container {
     background: white;
-    padding: 20px;
+    width: min(100%, 1180px);
+    padding: clamp(14px, 3vw, 24px);
     border-radius: 25px;
     box-shadow: 0px 6px 20px rgba(0,0,0,0.12);
     color: #1f2937;
@@ -70,7 +71,7 @@ st.markdown("""
 h1 {
     color: #16a34a !important;
     text-align: center;
-    font-size: 42px !important;
+    font-size: clamp(28px, 5vw, 42px) !important;
     font-weight: 900 !important;
 }
 
@@ -79,6 +80,7 @@ h1 {
 h2, h3 {
     color: #15803d !important;
     font-weight: 800 !important;
+    overflow-wrap: anywhere;
 }
 
 /* SIDEBAR */
@@ -100,7 +102,7 @@ section[data-testid="stSidebar"] * {
 
 .stButton button {
 
-    width: 100%;
+    width: min(100%, 220px);
     border: none;
     border-radius: 15px;
     padding: 12px;
@@ -114,6 +116,8 @@ section[data-testid="stSidebar"] * {
     color: white;
     font-size: 18px;
     font-weight: bold;
+    min-height: 48px;
+    white-space: normal;
 }
 
 .stButton button,
@@ -130,18 +134,110 @@ textarea {
     border: 2px solid #22c55e !important;
     padding: 10px !important;
     font-size: 17px !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+textarea::placeholder,
+input::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
+/* SELECT BOX */
+
+div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    border: 2px solid #22c55e !important;
+    border-radius: 12px !important;
+}
+
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] div {
+    color: #111827 !important;
+}
+
+div[role="listbox"],
+div[role="option"] {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+div[role="option"]:hover {
+    background: #dcfce7 !important;
+}
+
+/* CHAT */
+
+div[data-testid="stChatInput"] {
+    width: min(100%, 1100px) !important;
+    margin: 0 auto !important;
+    padding: 10px !important;
+}
+
+div[data-testid="stChatInput"] textarea {
+    min-height: 52px !important;
+    color: #111827 !important;
+    background: #ffffff !important;
+}
+
+div[data-testid="stChatInput"] textarea::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
+div[data-testid="stChatMessage"] {
+    overflow-wrap: anywhere;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* MOBILE */
 
 @media (max-width: 768px) {
 
-    h1 {
-        font-size: 30px !important;
+    .stApp {
+        background: #ffffff;
     }
 
     .block-container {
-        padding: 14px;
+        padding: 12px;
+        border-radius: 0;
+        box-shadow: none;
+        min-width: 0;
+    }
+
+    h1 {
+        font-size: 28px !important;
+        line-height: 1.15 !important;
+    }
+
+    h2, h3 {
+        font-size: 22px !important;
+        line-height: 1.2 !important;
+    }
+
+    .stButton button {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    div[data-baseweb="select"] > div,
+    .stNumberInput input,
+    textarea {
+        min-height: 48px !important;
+        font-size: 16px !important;
+    }
+
+    div[data-testid="stChatInput"] {
+        padding: 8px !important;
+    }
+
+    div[data-testid="stChatMessage"] {
+        padding: 8px 0 !important;
     }
 }
 
@@ -248,7 +344,7 @@ elif menu == "📏 Live Weight Calculator":
         st.image(
             "https://images.unsplash.com/photo-1500595046743-cd271d694d30",
             caption="🐄 Cow",
-            width=320
+            use_container_width=True
         )
 
     elif animal == "Buffalo":
@@ -256,7 +352,7 @@ elif menu == "📏 Live Weight Calculator":
         st.image(
             "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e",
             caption="🐃 Buffalo",
-            width=320
+            use_container_width=True
         )
 
     elif animal == "Horse":
@@ -264,7 +360,7 @@ elif menu == "📏 Live Weight Calculator":
         st.image(
             "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a",
             caption="🐎 Horse",
-            width=320
+            use_container_width=True
         )
 
     elif animal == "Goat":
@@ -272,7 +368,7 @@ elif menu == "📏 Live Weight Calculator":
         st.image(
             "https://images.unsplash.com/photo-1524024973431-2ad916746881",
             caption="🐐 Goat",
-            width=320
+            use_container_width=True
         )
 
     elif animal == "Pig":
@@ -280,7 +376,7 @@ elif menu == "📏 Live Weight Calculator":
         st.image(
             "https://images.unsplash.com/photo-1516467508483-a7212febe31a",
             caption="🐖 Pig",
-            width=320
+            use_container_width=True
         )
 
     # =====================================
@@ -471,6 +567,14 @@ elif menu == "🤖 AI Veterinary Assistant":
 
     st.header("🤖 AI Veterinary Assistant")
 
+    if "vet_chat_messages" not in st.session_state:
+
+        st.session_state.vet_chat_messages = []
+
+    if "vet_chat_animal" not in st.session_state:
+
+        st.session_state.vet_chat_animal = None
+
     animal = st.selectbox(
 
         "Select Animal",
@@ -484,19 +588,38 @@ elif menu == "🤖 AI Veterinary Assistant":
         ]
     )
 
-    user_problem = st.text_area(
-        "Describe Animal Problem"
-    )
+    if st.session_state.vet_chat_animal != animal:
 
-    if st.button("Get AI Analysis"):
+        st.session_state.vet_chat_messages = []
+        st.session_state.vet_chat_animal = animal
 
-        if user_problem.strip() == "":
+    if st.button("Clear Chat"):
 
-            st.warning(
-                "Please describe the problem."
-            )
+        st.session_state.vet_chat_messages = []
+        st.rerun()
 
-        else:
+    for message in st.session_state.vet_chat_messages:
+
+        with st.chat_message(message["role"]):
+
+            st.markdown(message["content"])
+
+    user_problem = st.chat_input("Describe your problem")
+
+    if user_problem:
+
+        st.session_state.vet_chat_messages.append(
+            {
+                "role": "user",
+                "content": user_problem,
+            }
+        )
+
+        with st.chat_message("user"):
+
+            st.markdown(user_problem)
+
+        with st.chat_message("assistant"):
 
             try:
                 if not API_KEY:
@@ -507,21 +630,38 @@ elif menu == "🤖 AI Veterinary Assistant":
 
                     st.stop()
 
-                prompt = f"""
-                You are an expert veterinary assistant.
+                system_prompt = f"""
+                You are a careful veterinary triage assistant for livestock farmers.
+                The selected animal is: {animal}.
 
-                Animal:
-                {animal}
+                Use the recent chat history to answer follow-up questions in context.
 
-                Problem:
-                {user_problem}
+                Important rules:
+                - Do not claim a confirmed diagnosis.
+                - Do not answer with only questions, "None", or a refusal.
+                - Always give the best practical provisional guidance from the available details.
+                - If details are limited, clearly say "Based on the limited information" and continue with likely causes and safe care steps.
+                - Prioritize emergency warning signs and when to call a veterinarian.
+                - Keep medicine advice general; do not give exact drug dosages unless a veterinarian has prescribed them.
+                - Use clear farmer-friendly language.
+                - If the farmer asks a follow-up, answer it directly using the previous context.
+                - Ask follow-up questions only after giving useful guidance.
+                - Ask at most 1 focused follow-up question, and skip it if the next step is already clear.
+            
 
-                Give:
-                1. Possible disease
-                2. Feeding advice
-                3. Treatment tips
-                4. Emergency warning
+                For a new health problem, use this structure:
+                1. Quick Triage
+                2. Possible Diseases / Causes
+                3. What To Do Now
+                4. Feeding And Water
+                5. What Not To Do
+                6. When To Call A Veterinarian
+
+                For a follow-up question, do not restart the whole interview. Use the chat context and give direct next steps.
                 """
+
+                previous_messages = st.session_state.vet_chat_messages[:-1][-3:]
+                current_message = st.session_state.vet_chat_messages[-1:]
 
                 response = requests.post(
 
@@ -540,12 +680,14 @@ elif menu == "🤖 AI Veterinary Assistant":
                         "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
 
                         "messages": [
-
                             {
-                                "role": "user",
-                                "content": prompt
-                            }
-                        ]
+                                "role": "system",
+                                "content": system_prompt,
+                            },
+                            *previous_messages,
+                            *current_message,
+                        ],
+                        "temperature": 0.2,
                     },
                 )
 
@@ -570,9 +712,14 @@ elif menu == "🤖 AI Veterinary Assistant":
                         "choices"
                     ][0]["message"]["content"]
 
-                    st.success("AI Veterinary Report")
+                    st.markdown(reply)
 
-                    st.write(reply)
+                    st.session_state.vet_chat_messages.append(
+                        {
+                            "role": "assistant",
+                            "content": reply,
+                        }
+                    )
 
             except Exception as e:
 
