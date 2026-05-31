@@ -4,6 +4,11 @@ import numpy as np
 import requests
 import json
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).with_name(".env"))
 
 # =========================================
 # PAGE CONFIG
@@ -41,6 +46,23 @@ st.markdown("""
     padding: 20px;
     border-radius: 25px;
     box-shadow: 0px 6px 20px rgba(0,0,0,0.12);
+    color: #1f2937;
+}
+
+/* MAIN TEXT */
+
+.block-container p,
+.block-container li,
+.block-container div,
+.block-container label,
+.block-container span {
+    color: #1f2937 !important;
+}
+
+.block-container .stAlert p,
+.block-container .stAlert div,
+.block-container .stAlert span {
+    color: #14532d !important;
 }
 
 /* TITLE */
@@ -94,6 +116,11 @@ section[data-testid="stSidebar"] * {
     font-weight: bold;
 }
 
+.stButton button,
+.stButton button * {
+    color: white !important;
+}
+
 /* INPUT BOX */
 
 .stNumberInput input,
@@ -125,7 +152,7 @@ textarea {
 # API KEY
 # =========================================
 
-API_KEY = os.getenv("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")
+API_KEY = os.getenv("API_KEY", "").strip()
 # =========================================
 # SIDEBAR MENU
 # =========================================
@@ -472,6 +499,13 @@ elif menu == "🤖 AI Veterinary Assistant":
         else:
 
             try:
+                if not API_KEY:
+
+                    st.error(
+                        "OpenRouter API key not found. Add API_KEY to Animal_project/.env and restart Streamlit."
+                    )
+
+                    st.stop()
 
                 prompt = f"""
                 You are an expert veterinary assistant.
@@ -500,7 +534,7 @@ elif menu == "🤖 AI Veterinary Assistant":
                         "Content-Type": "application/json",
                     },
 
-                    data=json.dumps({
+                    json={
 
                         "model":
                         "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
@@ -512,15 +546,22 @@ elif menu == "🤖 AI Veterinary Assistant":
                                 "content": prompt
                             }
                         ]
-                    }),
+                    },
                 )
 
                 response_data = response.json()
 
                 if "error" in response_data:
 
+                    api_error = response_data["error"]
+                    api_message = (
+                        api_error.get("message", api_error)
+                        if isinstance(api_error, dict)
+                        else api_error
+                    )
+
                     st.error(
-                        f"API Error: {response_data['error']}"
+                        f"API Error: {api_message}"
                     )
 
                 else:
