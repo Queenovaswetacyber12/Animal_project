@@ -421,19 +421,19 @@ elif menu == "📏 Live Weight Calculator":
 
             if weight < 20:
 
-                rate = 400
+                rate = 450
 
             elif weight < 40:
 
-                rate = 450
+                rate = 500
 
             elif weight < 60:
 
-                rate = 500
+                rate = 550
 
             else:
 
-                rate = 650
+                rate = 600
 
             market_price = weight * rate
 
