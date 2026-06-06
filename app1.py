@@ -19,7 +19,27 @@ st.set_page_config(
     page_icon="🐄",
     layout="wide"
 )
+st.markdown("""
+<style>
 
+/* Sidebar radio text */
+div[role="radiogroup"] label {
+    font-size: 13px !important;
+    line-height: 1.1 !important;
+}
+
+/* Sidebar title */
+section[data-testid="stSidebar"] h1 {
+    font-size: 32px !important;
+}
+
+/* Sidebar caption */
+section[data-testid="stSidebar"] {
+    padding-top: 10px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
 # =========================================
 # COLORFUL MOBILE UI
 # =========================================
