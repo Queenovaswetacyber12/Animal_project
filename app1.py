@@ -276,20 +276,20 @@ API_KEY = os.getenv("API_KEY", "").strip()
 st.sidebar.title("🐄 Livestock Menu")
 
 menu = st.sidebar.radio(
+"অপশন নির্বাচন করুন | Choose Option",
 
-    "অপশন নির্বাচন করুন | Choose Option",
     [
         "🏠 হোম | Home",
-        "📐 গার্থ ও লেন্থ মাপার নিয়ম | How To Measure Girth & Length",
-        "📏 লাইভ ওজন ক্যালকুলেটর | Live Weight Calculator",
+        "📐 গার্থ ও লেন্থ মাপার নিয়ম",
+        "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator",
         "💰 বাজার মূল্য | Market Price",
         "🩺 রোগ সম্পর্কিত তথ্য | Disease Info",
         "🥬 খাদ্য পরামর্শ | Feeding Tips",
-        "💉 টিকাকরণ নির্দেশিকা | Vaccination Guide",
-        "🤖 AI পশু চিকিৎসা সহায়ক | AI Veterinary Assistant",
+        "💉 টিকা নির্দেশিকা | Vaccination Guide",
+        "🤖 AI পশু চিকিৎসা সহায়ক",
         "ℹ️ অ্যাপ সম্পর্কে | About App"
     ]
- )
+  )
 # =========================================
 # HOME PAGE
 # =========================================
