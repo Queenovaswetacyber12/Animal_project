@@ -261,6 +261,7 @@ menu = st.sidebar.radio(
 
     [
         "🏠 Home",
+        "📐 How To Measure Girth",
         "📏 Live Weight Calculator",
         "💰 Market Price",
         "🩺 Disease Info",
@@ -313,6 +314,61 @@ if menu == "🏠 Home":
     st.success("✅ Goat & Pig Market Price")
 
     st.success("✅ Veterinary AI Assistant")
+
+#==========================================
+HOW TO MEASURE GIRTH
+# =========================================
+
+elif menu == "📐 How To Measure Girth":
+
+    st.header("📐 How To Measure Heart Girth")
+
+    st.info("""
+    Heart Girth means the circumference of the animal's chest.
+
+    Measure around the chest just behind the front legs using a measuring tape.
+    """)
+
+    st.subheader("📏 Typical Heart Girth Range")
+
+    st.table({
+        "Animal": [
+            "Goat",
+            "Pig",
+            "Cow",
+            "Buffalo",
+            "Horse"
+        ],
+        "Typical Girth (inch)": [
+            "20 - 40",
+            "25 - 55",
+            "45 - 90",
+            "55 - 100",
+            "50 - 85"
+        ]
+    })
+
+    st.success("""
+    Example:
+
+    Goat Chest Size = 30 inch
+
+    Body Length = 28 inch
+
+    Enter these values in the Live Weight Calculator.
+    """)
+
+    st.warning("""
+    ✔️ Measure just behind the front legs
+
+    ✔️ Keep tape snug but not too tight
+
+    ✔️ Measure in inches
+
+    ✔️ Animal should stand normally
+    """)
+
+
 
 # =========================================
 # LIVE WEIGHT CALCULATOR
@@ -388,11 +444,14 @@ elif menu == "📏 Live Weight Calculator":
         min_value=1.0
     )
 
+    st.caption(
+    "📏 Measure chest circumference just behind the front legs."
+    )
     length = st.number_input(
         "Enter Body Length (inch)",
         min_value=1.0
     )
-
+     
     # =====================================
     # CALCULATE BUTTON
     # =====================================
