@@ -338,23 +338,32 @@ Use both measurements in the Live Weight Calculator.
     caption="Heart Girth and Body Length Measurement Guide",
     use_container_width=True
     )
-    st.subheader("📏 Typical Heart Girth Range")
+    st.subheader("📏 Typical Heart Girth & body length Range")
     
-    st.table({
-        "Animal": [
-            "Goat",
-            "Pig",
-            "Cow",
-            "Buffalo",
-            "Horse"
-        ],
-        "Typical Girth (inch)": [
-            "20 - 40",
-            "25 - 55",
-            "45 - 90",
-            "55 - 100",
-            "50 - 85"
-        ]
+   st.table({
+    "Animal": [
+        "Goat",
+        "Pig",
+        "Cow",
+        "Buffalo",
+        "Horse"
+    ],
+
+    "Typical Girth (inch)": [
+        "20 - 40",
+        "25 - 55",
+        "45 - 90",
+        "55 - 100",
+        "50 - 85"
+    ],
+
+    "Typical Length (inch)": [
+        "18 - 35",
+        "25 - 50",
+        "40 - 80",
+        "45 - 90",
+        "45 - 75"
+    ]
     })
 
     st.success("""
