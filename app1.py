@@ -275,7 +275,7 @@ menu = st.sidebar.radio(
 # HOME PAGE
 # =========================================
 
-if menu == "🏠 Home":
+if menu == "🏠 হোম | Home":
 
     st.markdown(
         "<h1>🐄 Livestock AI Assistant</h1>",
@@ -318,7 +318,7 @@ if menu == "🏠 Home":
 # HOW TO MEASURE GIRTH & LENGTH
 # =========================================
 
-elif menu == "📐 How To Measure Girth & length":
+elif menu == "📐 গার্থ ও লেন্থ মাপার নিয়ম":
 
     st.header("📐 How To Measure Heart Girth & length")
 
@@ -407,7 +407,7 @@ Use both measurements in the Live Weight Calculator.
 # LIVE WEIGHT CALCULATOR
 # =========================================
 
-elif menu == "📏 Live Weight Calculator":
+elif menu == "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator":
 
     st.header("📏 Animal Live Weight Calculator")
 
@@ -599,7 +599,7 @@ elif menu == "📏 Live Weight Calculator":
 # MARKET PRICE
 # =========================================
 
-elif menu == "💰 Market Price":
+elif menu == "💰 বাজার মূল্য | Market Price":
 
     st.header("💰 Market Price Information")
 
@@ -613,7 +613,7 @@ elif menu == "💰 Market Price":
 # DISEASE INFO
 # =========================================
 
-elif menu == "🩺 Disease Info":
+elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease Info":
 
     st.header("🩺 Common Animal Diseases")
 
