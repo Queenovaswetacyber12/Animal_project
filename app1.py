@@ -261,7 +261,7 @@ menu = st.sidebar.radio(
 
     [
         "🏠 Home",
-        "📐 How To Measure Girth",
+        "📐 How To Measure Girth & length",
         "📏 Live Weight Calculator",
         "💰 Market Price",
         "🩺 Disease Info",
