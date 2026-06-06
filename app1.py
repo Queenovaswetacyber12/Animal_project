@@ -821,7 +821,7 @@ elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
 # ABOUT APP
 # =========================================
 
-elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
+elif menu == "ℹ️ অ্যাপ সম্পর্কে | About App":
 
     st.header("ℹ️ About App")
 
