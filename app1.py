@@ -257,21 +257,20 @@ st.sidebar.title("🐄 Livestock Menu")
 
 menu = st.sidebar.radio(
 
-    "Choose Option",
+    "অপশন নির্বাচন করুন | Choose Option",
 
     [
-        "🏠 Home",
-        "📐 How To Measure Girth & length",
-        "📏 Live Weight Calculator",
-        "💰 Market Price",
-        "🩺 Disease Info",
-        "🥬 Feeding Tips",
-        "💉 Vaccination Guide",
-        "🤖 AI Veterinary Assistant",
-        "ℹ️ About App"
+        "🏠 হোম | Home",
+        "📐 গার্থ ও লেন্থ মাপার নিয়ম",
+        "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator",
+        "💰 বাজার মূল্য | Market Price",
+        "🩺 রোগ সম্পর্কিত তথ্য | Disease Info",
+        "🥬 খাদ্য পরামর্শ | Feeding Tips",
+        "💉 টিকা নির্দেশিকা | Vaccination Guide",
+        "🤖 AI পশু চিকিৎসা সহায়ক",
+        "ℹ️ অ্যাপ সম্পর্কে | About App"
     ]
-)
-
+  )
 # =========================================
 # HOME PAGE
 # =========================================
