@@ -316,7 +316,7 @@ if menu == "🏠 Home":
     st.success("✅ Veterinary AI Assistant")
 
 #==========================================
-HOW TO MEASURE GIRTH
+# HOW TO MEASURE GIRTH
 # =========================================
 
 elif menu == "📐 How To Measure Girth":
