@@ -333,12 +333,26 @@ Measure from the point of the shoulder to the pin bone (rear end).
 Use both measurements in the Live Weight Calculator.
     """)
     
+    st.subheader("🐄 Cow Measurement")
+
     st.image(
-       
     "cow.jfif",
-    caption="Heart Girth & Body Length Measurement Guide",
     use_container_width=True
-    )
+)
+
+    st.subheader("🐐 Goat Measurement")
+
+    st.image(
+    "goat.jfif",
+    use_container_width=True
+)
+
+    st.subheader("🐖 Pig Measurement")
+
+    st.image(
+    "pig.jfif",
+    use_container_width=True
+)
    
     st.subheader("📏 Typical Heart Girth & body length Range")
     
