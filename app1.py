@@ -321,7 +321,7 @@ if menu == "🏠 Home":
 
 elif menu == "📐 How To Measure Girth & length":
 
-    st.header("📐 How To Measure Heart Girth")
+    st.header("📐 How To Measure Heart Girth & length")
 
     st.info("""
     Heart Girth:
@@ -339,7 +339,7 @@ Use both measurements in the Live Weight Calculator.
     use_container_width=True
     )
     st.subheader("📏 Typical Heart Girth Range")
-
+    
     st.table({
         "Animal": [
             "Goat",
