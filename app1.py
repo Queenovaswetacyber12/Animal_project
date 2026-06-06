@@ -332,6 +332,7 @@ Measure from the point of the shoulder to the pin bone (rear end).
 
 Use both measurements in the Live Weight Calculator.
     """)
+    
     st.image(
     "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Cattle_measurement_diagram.png/800px-Cattle_measurement_diagram.png",
     caption="Heart Girth and Body Length Measurement Guide",
