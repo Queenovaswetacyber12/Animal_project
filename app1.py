@@ -316,19 +316,27 @@ if menu == "🏠 Home":
     st.success("✅ Veterinary AI Assistant")
 
 #==========================================
-# HOW TO MEASURE GIRTH
+# HOW TO MEASURE GIRTH & LENGTH
 # =========================================
 
-elif menu == "📐 How To Measure Girth":
+elif menu == "📐 How To Measure Girth & length":
 
     st.header("📐 How To Measure Heart Girth")
 
     st.info("""
-    Heart Girth means the circumference of the animal's chest.
+    Heart Girth:
+Measure the chest circumference just behind the front legs.
 
-    Measure around the chest just behind the front legs using a measuring tape.
+Body Length:
+Measure from the point of the shoulder to the pin bone (rear end).
+
+Use both measurements in the Live Weight Calculator.
     """)
-
+    st.image(
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Cattle_measurement_diagram.png/800px-Cattle_measurement_diagram.png",
+    caption="Heart Girth and Body Length Measurement Guide",
+    use_container_width=True
+    )
     st.subheader("📏 Typical Heart Girth Range")
 
     st.table({
