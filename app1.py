@@ -627,7 +627,7 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 # FEEDING TIPS
 # =========================================
 
-elif menu == "🥬 Feeding Tips":
+elif menu == "🥬 খাদ্য পরামর্শ | Feeding Tips":
 
     st.header("🥬 Feeding Tips")
 
@@ -641,7 +641,7 @@ elif menu == "🥬 Feeding Tips":
 # VACCINATION GUIDE
 # =========================================
 
-elif menu == "💉 Vaccination Guide":
+elif menu == "💉 টিকা নির্দেশিকা | Vaccination Guide":
 
     st.header("💉 Vaccination Guide")
 
@@ -655,7 +655,7 @@ elif menu == "💉 Vaccination Guide":
 # AI VETERINARY ASSISTANT
 # =========================================
 
-elif menu == "🤖 AI Veterinary Assistant":
+elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
 
     st.header("🤖 AI Veterinary Assistant")
 
@@ -821,7 +821,7 @@ elif menu == "🤖 AI Veterinary Assistant":
 # ABOUT APP
 # =========================================
 
-elif menu == "ℹ️ About App":
+elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
 
     st.header("ℹ️ About App")
 
