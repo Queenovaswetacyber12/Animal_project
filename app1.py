@@ -42,8 +42,7 @@ section[data-testid="stSidebar"] {
 """, unsafe_allow_html=True)
 # =========================================
 # COLORFUL MOBILE UI
-# =========================================
-
+# ==========================================
 st.markdown("""
 <style>
 
