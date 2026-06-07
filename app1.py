@@ -301,7 +301,7 @@ if menu == "🏠 হোম | Home":
     )
 
     st.subheader(
-        "st.title("🐄 Smart Animal Husbandry App")"
+        st.title("🐄 Smart Animal Husbandry App")
     )
 
     st.write(
