@@ -633,39 +633,157 @@ elif menu == "💰 Market Price Information":
 
 elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease Info":
 
-    st.header("🩺 Common Animal Diseases")
-    st.subheader("FMD (Foot and Mouth Disease)")
-st.write("""
-লক্ষণ:
-- মুখে ঘা
-- জ্বর
-- খাওয়া কমে যাওয়া
+   st.header("🐛 রোগ সম্পর্কিত তথ্য | Disease Information")
 
-প্রতিরোধ:
-- নিয়মিত টিকা
-- আক্রান্ত পশু আলাদা রাখা
+    search_disease = st.text_input(
+        "🔍 রোগের নাম লিখুন | Search Disease Information"
+    )
+
+    if search_disease:
+        search_disease = search_disease.lower()
+
+    else:
+        search_disease = ""
+
+    # =========================
+    # FMD
+    # =========================
+    if search_disease == "" or "fmd" in search_disease:
+
+        st.subheader("🐄 FMD (Foot and Mouth Disease)")
+
+        st.info("""
+🔹 রোগের নাম: Foot and Mouth Disease (FMD)
+
+🦠 কারণ:
+ভাইরাসজনিত অত্যন্ত সংক্রামক রোগ।
+
+⚠️ লক্ষণ:
+* মুখে ঘা
+* অতিরিক্ত লালা ঝরা
+* জ্বর
+* খাওয়া কমে যাওয়া
+* খোঁড়া হয়ে হাঁটা
+
+💊 চিকিৎসা:
+* পশু চিকিৎসকের পরামর্শ নিন
+* জীবাণুনাশক ব্যবহার করুন
+* আক্রান্ত পশুকে আলাদা রাখুন
+
+🛡️ প্রতিরোধ:
+* নিয়মিত টিকা দিন
+* খামার পরিষ্কার রাখুন
+* নতুন পশু আনার আগে পর্যবেক্ষণ করুন
 """)
-    st.subheader("Black Quarter (BQ)")
-st.write("""
-লক্ষণ:
-- জ্বর
-- পা ফুলে যাওয়া
-- হঠাৎ মৃত্যু
 
-প্রতিরোধ:
-- BQ ভ্যাকসিন
+    # =========================
+    # BLACK QUARTER
+    # =========================
+    if (
+        search_disease == ""
+        or "bq" in search_disease
+        or "black quarter" in search_disease
+    ):
+
+        st.subheader("🐄 Black Quarter (BQ)")
+
+        st.warning("""
+🦠 কারণ:
+ব্যাকটেরিয়াজনিত মারাত্মক রোগ।
+
+⚠️ লক্ষণ:
+* হঠাৎ জ্বর
+* পেশী ফুলে যাওয়া
+* চলাফেরায় কষ্ট
+* খাওয়া বন্ধ
+
+💊 চিকিৎসা:
+* দ্রুত ভেটেরিনারি চিকিৎসা
+* অ্যান্টিবায়োটিক
+
+🛡️ প্রতিরোধ:
+* BQ টিকা প্রদান
+* পরিষ্কার পরিবেশ বজায় রাখা
 """)
-    st.warning("🐐 Goat: PPR, Fever, Diarrhea")
 
-    st.warning("🐄 Cow: FMD, Mastitis")
+    # =========================
+    # PPR
+    # =========================
+    if search_disease == "" or "ppr" in search_disease:
 
-    st.warning("🐖 Pig: Swine Fever")
+        st.subheader("🐐 PPR (Goat Plague)")
 
-    search = st.text_input("রোগের নাম লিখুন")
+        st.error("""
+🦠 কারণ:
+ভাইরাসজনিত রোগ।
 
-if search:
-    st.write("Searching disease information...")
+⚠️ লক্ষণ:
+* জ্বর
+* নাক দিয়ে পানি পড়া
+* ডায়রিয়া
+* দুর্বলতা
 
+💊 চিকিৎসা:
+* স্যালাইন
+* সাপোর্টিভ কেয়ার
+
+🛡️ প্রতিরোধ:
+* PPR টিকা
+* আক্রান্ত ছাগল আলাদা রাখা
+""")
+
+    # =========================
+    # SWINE FEVER
+    # =========================
+    if (
+        search_disease == ""
+        or "swine" in search_disease
+        or "fever" in search_disease
+    ):
+
+        st.subheader("🐖 Swine Fever")
+
+        st.info("""
+🦠 কারণ:
+ভাইরাসজনিত রোগ।
+
+⚠️ লক্ষণ:
+* উচ্চ জ্বর
+* ক্ষুধামন্দা
+* দুর্বলতা
+
+💊 চিকিৎসা:
+* ভেটেরিনারি পরামর্শ
+
+🛡️ প্রতিরোধ:
+* টিকাদান
+* খামার জীবাণুমুক্ত রাখা
+""")
+
+    # =========================
+    # MASTITIS
+    # =========================
+    if search_disease == "" or "mastitis" in search_disease:
+
+        st.subheader("🐄 Mastitis")
+
+        st.success("""
+🦠 কারণ:
+স্তনের সংক্রমণ।
+
+⚠️ লক্ষণ:
+* দুধে পরিবর্তন
+* স্তন ফুলে যাওয়া
+* ব্যথা
+
+💊 চিকিৎসা:
+* অ্যান্টিবায়োটিক
+* পরিষ্কারভাবে দুধ দোহন
+
+🛡️ প্রতিরোধ:
+* পরিষ্কার পরিবেশ
+* নিয়মিত স্বাস্থ্য পরীক্ষা
+""")
 # =========================================
 # FEEDING TIPS
 # =========================================
