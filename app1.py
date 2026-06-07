@@ -735,11 +735,10 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
     # =========================
     # SWINE FEVER
     # =========================
-    if (
-        search_disease == ""
+    if (search_disease == ""
         or "swine" in search_disease
         or "fever" in search_disease
-    ):
+      ):
 
         st.subheader("🐖 Swine Fever")
 
