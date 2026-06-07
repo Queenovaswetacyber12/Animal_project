@@ -282,7 +282,7 @@ menu = st.sidebar.radio(
         "🏠 হোম | Home",
         "📐 গার্থ ও লেন্থ মাপার নিয়ম",
         "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator",
-        "💰 বাজার মূল্য | Market Price",
+        "🐄 স্মার্ট পশুপালন | Smart Animal Husbandry",
         "🩺 রোগ সম্পর্কিত তথ্য | Disease Info",
         "🥬 খাদ্য পরামর্শ | Feeding Tips",
         "💉 টিকা নির্দেশিকা | Vaccination Guide",
@@ -302,7 +302,7 @@ if menu == "🏠 হোম | Home":
     )
 
     st.subheader(
-        "Smart Veterinary & Market Price System"
+        "st.title("🐄 Smart Animal Husbandry App")"
     )
 
     st.write(
@@ -618,7 +618,7 @@ elif menu == "📏 লাইভ ওয়েট ক্যালকুলেট�
 # MARKET PRICE
 # =========================================
 
-elif menu == "💰 বাজার মূল্য | Market Price":
+elif menu == "💰 Market Price Information":
 
     st.header("💰 Market Price Information")
 
@@ -635,12 +635,37 @@ elif menu == "💰 বাজার মূল্য | Market Price":
 elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease Info":
 
     st.header("🩺 Common Animal Diseases")
+    st.subheader("FMD (Foot and Mouth Disease)")
+st.write("""
+লক্ষণ:
+- মুখে ঘা
+- জ্বর
+- খাওয়া কমে যাওয়া
 
+প্রতিরোধ:
+- নিয়মিত টিকা
+- আক্রান্ত পশু আলাদা রাখা
+""")
+    st.subheader("Black Quarter (BQ)")
+st.write("""
+লক্ষণ:
+- জ্বর
+- পা ফুলে যাওয়া
+- হঠাৎ মৃত্যু
+
+প্রতিরোধ:
+- BQ ভ্যাকসিন
+""")
     st.warning("🐐 Goat: PPR, Fever, Diarrhea")
 
     st.warning("🐄 Cow: FMD, Mastitis")
 
     st.warning("🐖 Pig: Swine Fever")
+
+    search = st.text_input("রোগের নাম লিখুন")
+
+if search:
+    st.write("Searching disease information...")
 
 # =========================================
 # FEEDING TIPS
@@ -669,6 +694,23 @@ elif menu == "💉 টিকা নির্দেশিকা | Vaccination Gui
     st.info("🐄 Cow FMD Vaccine: Every 6 months")
 
     st.info("🐖 Pig Swine Fever Vaccine")
+    st.table({
+    "Disease":[
+        "FMD",
+        "HS",
+        "BQ",
+        "PPR",
+        "Goat Pox"
+    ],
+
+    "When":[
+        "Every 6 months",
+        "Yearly",
+        "Yearly",
+        "Yearly",
+        "Yearly"
+    ]
+ })
 
 # =========================================
 # AI VETERINARY ASSISTANT
