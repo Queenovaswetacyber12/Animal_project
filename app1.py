@@ -635,7 +635,7 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 
    st.header("🐛 রোগ সম্পর্কিত তথ্য | Disease Information")
 
-    search_disease = st.text_input(
+   search_disease = st.text_input(
         "🔍 রোগের নাম লিখুন | Search Disease Information"
     )
 
