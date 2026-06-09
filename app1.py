@@ -683,11 +683,11 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
     )
     if search_disease:
 
-    try:
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {API_KEY}",
+        try:
+            response = requests.post(
+     "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {API_KEY}",
                 "Content-Type": "application/json"
             },
             json={
