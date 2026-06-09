@@ -681,7 +681,60 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
     search_disease = st.text_input(
         "🔍 রোগের নাম লিখুন | Search Disease Information"
     )
+    if search_disease:
 
+    try:
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+                "messages": [
+                    {
+                        "role": "system",
+                        "content": """
+You are a veterinary disease information assistant.
+Answer only in Bengali.
+Provide information under these headings:
+1. রোগের কারণ
+2. লক্ষণ
+3. চিকিৎসা
+4. প্রতিরোধ
+"""
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Animal disease: {search_disease}"
+                    }
+                ],
+                "temperature": 0.3,
+                "max_tokens": 1000
+            },
+            timeout=60
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        if "choices" in data:
+            reply = data["choices"][0]["message"]["content"]
+            st.markdown(reply)
+        else:
+            st.error("No response received from AI model.")
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"API Error: {e}")
+
+    except KeyError:
+        st.error("Unexpected API response format.")
+
+    except Exception as e:
+        st.error(f"Error: {e}")
+  
     if search_disease:
         search_disease = search_disease.lower()
     else:
