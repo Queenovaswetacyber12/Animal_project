@@ -726,10 +726,10 @@ Provide information under these headings:
         else:
             st.error("No response received from AI model.")
 
-    except requests.exceptions.RequestException as e:
+       except requests.exceptions.RequestException as e:
         st.error(f"API Error: {e}")
 
-    except KeyError:
+       except KeyError:
         st.error("Unexpected API response format.")
 
     except Exception as e:
