@@ -630,9 +630,9 @@ elif menu == "💰 Market Price Information":
 #🐄 স্মার্ট পশুপালন | Smart Animal Husbandry
 #========================================
 
-elif menu == "🐄 স্মার্ট পশু পালন | Smart Animal Husbandry":
+elif menu == "🐄 স্মার্ট পশুপালন | Smart Animal Husbandry":
         st.write ("smart section loaded") 
-        st.header("🐄 স্মার্ট পশু পালন | Smart Animal Husbandry")
+        st.header("🐄 স্মার্ট পশুপালন | Smart Animal Husbandry")
 
         st.success("সফল ও লাভজনক পশুপালনের জন্য গুরুত্বপূর্ণ পরামর্শ")
 
