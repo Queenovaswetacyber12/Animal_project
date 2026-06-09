@@ -674,9 +674,9 @@ elif menu == "🐄 স্মার্ট পশুপালন | Smart Animal Hu
 # =========================================
 # DISEASE INFO
 # =========================================
-elif menu == "🐛 রোগ সম্পর্কিত তথ্য | Disease Info":
+elif menu == "🐛 রোগসম্পর্কিত তথ্য | Disease Info":
 
-    st.header("🐛 রোগ সম্পর্কিত তথ্য | Disease Information")
+    st.header("🐛 রোগসম্পর্কিত তথ্য | Disease Information")
 
     search_disease = st.text_input(
         "🔍 রোগের নাম লিখুন | Search Disease Information"
