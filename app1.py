@@ -630,24 +630,20 @@ elif menu == "💰 Market Price Information":
 # =========================================
 # DISEASE INFO
 # =========================================
+elif menu == "🐛 রোগ সম্পর্কিত তথ্য | Disease Info":
 
-elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease Info":
+    st.header("🐛 রোগ সম্পর্কিত তথ্য | Disease Information")
 
-   st.header("🐛 রোগ সম্পর্কিত তথ্য | Disease Information")
-
-   search_disease = st.text_input(
+    search_disease = st.text_input(
         "🔍 রোগের নাম লিখুন | Search Disease Information"
     )
 
     if search_disease:
         search_disease = search_disease.lower()
-
     else:
         search_disease = ""
 
-    # =========================
     # FMD
-    # =========================
     if search_disease == "" or "fmd" in search_disease:
 
         st.subheader("🐄 FMD (Foot and Mouth Disease)")
@@ -676,9 +672,7 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 * নতুন পশু আনার আগে পর্যবেক্ষণ করুন
 """)
 
-    # =========================
-    # BLACK QUARTER
-    # =========================
+    # Black Quarter
     if (
         search_disease == ""
         or "bq" in search_disease
@@ -704,84 +698,6 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 🛡️ প্রতিরোধ:
 * BQ টিকা প্রদান
 * পরিষ্কার পরিবেশ বজায় রাখা
-""")
-
-    # =========================
-    # PPR
-    # =========================
-    if search_disease == "" or "ppr" in search_disease:
-
-        st.subheader("🐐 PPR (Goat Plague)")
-
-        st.error("""
-🦠 কারণ:
-ভাইরাসজনিত রোগ।
-
-⚠️ লক্ষণ:
-* জ্বর
-* নাক দিয়ে পানি পড়া
-* ডায়রিয়া
-* দুর্বলতা
-
-💊 চিকিৎসা:
-* স্যালাইন
-* সাপোর্টিভ কেয়ার
-
-🛡️ প্রতিরোধ:
-* PPR টিকা
-* আক্রান্ত ছাগল আলাদা রাখা
-""")
-
-    # =========================
-    # SWINE FEVER
-    # =========================
-    if (search_disease == ""
-        or "swine" in search_disease
-        or "fever" in search_disease
-      ):
-
-        st.subheader("🐖 Swine Fever")
-
-        st.info("""
-🦠 কারণ:
-ভাইরাসজনিত রোগ।
-
-⚠️ লক্ষণ:
-* উচ্চ জ্বর
-* ক্ষুধামন্দা
-* দুর্বলতা
-
-💊 চিকিৎসা:
-* ভেটেরিনারি পরামর্শ
-
-🛡️ প্রতিরোধ:
-* টিকাদান
-* খামার জীবাণুমুক্ত রাখা
-""")
-
-    # =========================
-    # MASTITIS
-    # =========================
-    if search_disease == "" or "mastitis" in search_disease:
-
-        st.subheader("🐄 Mastitis")
-
-        st.success("""
-🦠 কারণ:
-স্তনের সংক্রমণ।
-
-⚠️ লক্ষণ:
-* দুধে পরিবর্তন
-* স্তন ফুলে যাওয়া
-* ব্যথা
-
-💊 চিকিৎসা:
-* অ্যান্টিবায়োটিক
-* পরিষ্কারভাবে দুধ দোহন
-
-🛡️ প্রতিরোধ:
-* পরিষ্কার পরিবেশ
-* নিয়মিত স্বাস্থ্য পরীক্ষা
 """)
 # =========================================
 # FEEDING TIPS
