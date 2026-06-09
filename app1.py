@@ -627,7 +627,7 @@ elif menu == "💰 Market Price Information":
     st.info("🐄 Cow Price depends on local market")
 
 #=========================================
-#smart Animal Husbandary
+#🐄 স্মার্ট পশুপালন | Smart Animal Husbandry
 #========================================
 elif menu == "🐄 স্মার্ট পশু পালন | Smart Animal Husbandry":
 
