@@ -300,9 +300,8 @@ if menu == "🏠 হোম | Home":
         unsafe_allow_html=True
     )
 
-    st.subheader(
-        st.title("🐄 Smart Animal Husbandry App")
-    )
+    st.title("🐄 Smart Animal Husbandry App")
+    
 
     st.write(
         "Calculate live weight, market price and get veterinary support."
