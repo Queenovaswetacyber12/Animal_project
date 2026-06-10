@@ -804,84 +804,114 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 #=============================================
 elif menu == "🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker":
 
-    st.header("🔍 লক্ষণ দেখে রোগ শনাক্ত")
+    st.header("🔍 লক্ষণ দেখে রোগ শনাক্ত | AI Symptom Checker")
+
+    st.info("লক্ষণ লিখুন, AI সম্ভাব্য রোগ সম্পর্কে প্রাথমিক ধারণা দেবে")
 
     animal = st.selectbox(
-        "🐄 পশু নির্বাচন করুন",
-        ["Cow", "Goat", "Buffalo", "Sheep", "Pig"]
-    )
-
-    symptoms = st.multiselect(
-        "লক্ষণ নির্বাচন করুন",
+        "🐄 পশু নির্বাচন করুন | Select Animal",
         [
-            "Fever",
-            "Mouth Lesion",
-            "Excess Salivation",
-            "Lameness",
-            "Diarrhea",
-            "Cough",
-            "Breathing Difficulty",
-            "Skin Nodules",
-            "Loss of Appetite",
-            "Abdominal Bloat"
+            "Cow",
+            "Goat",
+            "Buffalo",
+            "Sheep",
+            "Pig",
+            "Poultry"
         ]
     )
 
-    if st.button("সম্ভাব্য রোগ দেখুন"):
+    symptom_text = st.text_area(
+        "📝 লক্ষণ লিখুন",
+        height=150,
+        placeholder="""
+উদাহরণ:
 
-        diseases = []
+জ্বর আছে
+মুখ দিয়ে লালা পড়ছে
+খাবার খাচ্ছে না
+খুঁড়িয়ে হাঁটছে
 
-        if (
-            "Fever" in symptoms and
-            "Mouth Lesion" in symptoms and
-            "Excess Salivation" in symptoms
-        ):
-            diseases.append("FMD (Foot and Mouth Disease)")
+অথবা
 
-        if (
-            "Fever" in symptoms and
-            "Diarrhea" in symptoms and
-            animal == "Goat"
-        ):
-            diseases.append("PPR (Peste des Petits Ruminants)")
+Fever, salivation, mouth lesion, lameness
+"""
+    )
 
-        if (
-            "Fever" in symptoms and
-            "Breathing Difficulty" in symptoms
-        ):
-            diseases.append("HS (Hemorrhagic Septicemia)")
+    if st.button("🔍 রোগ বিশ্লেষণ করুন"):
 
-        if (
-            "Skin Nodules" in symptoms and
-            animal == "Cow"
-        ):
-            diseases.append("Lumpy Skin Disease (LSD)")
+        if symptom_text.strip() == "":
 
-        if (
-            "Cough" in symptoms and
-            "Breathing Difficulty" in symptoms
-        ):
-            diseases.append("Pneumonia")
-
-        if (
-            "Abdominal Bloat" in symptoms
-        ):
-            diseases.append("Bloat / Tympany")
-
-        if diseases:
-
-            st.success("সম্ভাব্য রোগ:")
-
-            for disease in diseases:
-                st.write("✅", disease)
+            st.warning("অনুগ্রহ করে লক্ষণ লিখুন")
 
         else:
-            st.warning(
-                "নির্দিষ্ট রোগ শনাক্ত করা যায়নি। পশুচিকিৎসকের পরামর্শ নিন।"
-            )
 
+            with st.spinner("AI বিশ্লেষণ করছে..."):
 
+                try:
 
+                    response = requests.post(
+                        "https://openrouter.ai/api/v1/chat/completions",
+                        headers={
+                            "Authorization": f"Bearer {API_KEY}",
+                            "Content-Type": "application/json"
+                        },
+                        json={
+                            "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+                            "messages": [
+                                {
+                                    "role": "system",
+                                    "content": """
+You are an expert veterinary assistant.
+
+Analyze the symptoms and provide:
+
+১. সম্ভাব্য রোগ
+২. রোগ হওয়ার কারণ
+৩. কতটা সম্ভাবনা (High/Medium/Low)
+৪. প্রাথমিক করণীয়
+৫. প্রতিরোধ ব্যবস্থা
+৬. কখন পশু চিকিৎসকের সাথে যোগাযোগ করতে হবে
+
+Important:
+- Use simple Bengali.
+- Farmer friendly language.
+- Mention that it is not a final diagnosis.
+"""
+                                },
+                                {
+                                    "role": "user",
+                                    "content": f"""
+Animal: {animal}
+
+Symptoms:
+{symptom_text}
+"""
+                                }
+                            ]
+                        }
+                    )
+
+                    result = response.json()
+
+                    if "choices" in result:
+
+                        answer = result["choices"][0]["message"]["content"]
+
+                        st.success("✅ বিশ্লেষণ সম্পন্ন")
+
+                        st.markdown(answer)
+
+                        st.warning(
+                            "⚠️ এটি শুধুমাত্র AI ভিত্তিক প্রাথমিক বিশ্লেষণ। নিশ্চিত রোগ নির্ণয়ের জন্য পশুচিকিৎসকের পরামর্শ নিন।"
+                        )
+
+                    else:
+
+                        st.error("AI থেকে উত্তর পাওয়া যায়নি")
+
+                except Exception as e:
+
+                    st.error(f"ত্রুটি: {e}")
 
 # =========================================
 # FEEDING TIPS
