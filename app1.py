@@ -683,11 +683,12 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
     )
     if search_disease:
 
-        try:
-            response = requests.post(
-     "https://openrouter.ai/api/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {API_KEY}",
+    try:
+
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
                 "Content-Type": "application/json"
             },
             json={
@@ -695,23 +696,24 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
                 "messages": [
                     {
                         "role": "system",
-                        "content": """
-You are a veterinary disease information assistant.
-Answer only in Bengali.
-Provide information under these headings:
-1. রোগের কারণ
-2. লক্ষণ
-3. চিকিৎসা
-4. প্রতিরোধ
-"""
+                        "content": "You are a veterinary disease information assistant. Answer only in Bengali."
                     },
                     {
                         "role": "user",
-                        "content": f"Animal disease: {search_disease}"
+                        "content": f"""
+পশুর রোগ: {search_disease}
+
+বাংলায় নিম্নলিখিত শিরোনামে উত্তর দাও:
+
+1. রোগের পরিচিতি
+2. কারণ
+3. লক্ষণ
+4. রোগ নির্ণয়
+5. চিকিৎসা
+6. প্রতিরোধ
+"""
                     }
-                ],
-                "temperature": 0.3,
-                "max_tokens": 1000
+                ]
             },
             timeout=60
         )
@@ -721,18 +723,17 @@ Provide information under these headings:
         data = response.json()
 
         if "choices" in data:
+
             reply = data["choices"][0]["message"]["content"]
+
             st.markdown(reply)
+
         else:
+
             st.error("No response received from AI model.")
 
-       except requests.exceptions.RequestException as e:
-        st.error(f"API Error: {e}")
-
-       except KeyError:
-        st.error("Unexpected API response format.")
-
     except Exception as e:
+
         st.error(f"Error: {e}")
   
     if search_disease:
