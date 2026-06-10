@@ -283,6 +283,7 @@ menu = st.sidebar.radio(
         "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator",
         "🐄 স্মার্ট পশুপালন | Smart Animal Husbandry",
         "🩺 রোগ সম্পর্কিত তথ্য | Disease Info",
+        "🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker",
         "🥬 খাদ্য পরামর্শ | Feeding Tips",
         "💉 টিকা নির্দেশিকা | Vaccination Guide",
         "🤖 AI পশু চিকিৎসা সহায়ক",
@@ -798,6 +799,90 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 * BQ টিকা প্রদান
 * পরিষ্কার পরিবেশ বজায় রাখা
 """)
+#============================================
+#"🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker",
+#=============================================
+elif menu == "🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker":
+
+    st.header("🔍 লক্ষণ দেখে রোগ শনাক্ত")
+
+    animal = st.selectbox(
+        "🐄 পশু নির্বাচন করুন",
+        ["Cow", "Goat", "Buffalo", "Sheep", "Pig"]
+    )
+
+    symptoms = st.multiselect(
+        "লক্ষণ নির্বাচন করুন",
+        [
+            "Fever",
+            "Mouth Lesion",
+            "Excess Salivation",
+            "Lameness",
+            "Diarrhea",
+            "Cough",
+            "Breathing Difficulty",
+            "Skin Nodules",
+            "Loss of Appetite",
+            "Abdominal Bloat"
+        ]
+    )
+
+    if st.button("সম্ভাব্য রোগ দেখুন"):
+
+        diseases = []
+
+        if (
+            "Fever" in symptoms and
+            "Mouth Lesion" in symptoms and
+            "Excess Salivation" in symptoms
+        ):
+            diseases.append("FMD (Foot and Mouth Disease)")
+
+        if (
+            "Fever" in symptoms and
+            "Diarrhea" in symptoms and
+            animal == "Goat"
+        ):
+            diseases.append("PPR (Peste des Petits Ruminants)")
+
+        if (
+            "Fever" in symptoms and
+            "Breathing Difficulty" in symptoms
+        ):
+            diseases.append("HS (Hemorrhagic Septicemia)")
+
+        if (
+            "Skin Nodules" in symptoms and
+            animal == "Cow"
+        ):
+            diseases.append("Lumpy Skin Disease (LSD)")
+
+        if (
+            "Cough" in symptoms and
+            "Breathing Difficulty" in symptoms
+        ):
+            diseases.append("Pneumonia")
+
+        if (
+            "Abdominal Bloat" in symptoms
+        ):
+            diseases.append("Bloat / Tympany")
+
+        if diseases:
+
+            st.success("সম্ভাব্য রোগ:")
+
+            for disease in diseases:
+                st.write("✅", disease)
+
+        else:
+            st.warning(
+                "নির্দিষ্ট রোগ শনাক্ত করা যায়নি। পশুচিকিৎসকের পরামর্শ নিন।"
+            )
+
+
+
+
 # =========================================
 # FEEDING TIPS
 # =========================================
