@@ -965,31 +965,135 @@ elif menu == "🥬 খাদ্য পরামর্শ | Feeding Tips":
 
 elif menu == "💉 টিকা নির্দেশিকা | Vaccination Guide":
 
-    st.header("💉 Vaccination Guide")
+    st.header("💉 টিকা নির্দেশিকা | Vaccination Guide")
 
-    st.info("🐐 Goat PPR Vaccine: Every year")
+    animal = st.selectbox(
+        "🐾 প্রাণী নির্বাচন করুন | Select Animal",
+        [
+            "🐄 Cow",
+            "🐐 Goat",
+            "🐑 Sheep",
+            "🐖 Pig"
+        ]
+    )
 
-    st.info("🐄 Cow FMD Vaccine: Every 6 months")
+    if animal == "🐄 Cow":
 
-    st.info("🐖 Pig Swine Fever Vaccine")
-    st.table({
-    "Disease":[
-        "FMD",
-        "HS",
-        "BQ",
-        "PPR",
-        "Goat Pox"
-    ],
+        st.subheader("🐄 Cow Vaccination Schedule")
 
-    "When":[
-        "Every 6 months",
-        "Yearly",
-        "Yearly",
-        "Yearly",
-        "Yearly"
-    ]
- })
+        st.table({
+            "Disease": [
+                "FMD (Foot & Mouth Disease)",
+                "HS (Haemorrhagic Septicaemia)",
+                "BQ (Black Quarter)",
+                "Brucellosis",
+                "Theileriosis (Risk Area)"
+            ],
+            "Vaccination Time": [
+                "Every 6 months",
+                "Once yearly (Before Monsoon)",
+                "Once yearly",
+                "Female calf at 4-8 months",
+                "As advised by veterinarian"
+            ]
+        })
 
+        st.success("✅ Calves should receive colostrum within 2 hours of birth.")
+        st.success("✅ Deworm before vaccination whenever possible.")
+        st.success("✅ Vaccinate only healthy animals.")
+        st.info("💡 Maintain vaccine cold chain (2-8°C).")
+
+    elif animal == "🐐 Goat":
+
+        st.subheader("🐐 Goat Vaccination Schedule")
+
+        st.table({
+            "Disease": [
+                "PPR",
+                "Goat Pox",
+                "Enterotoxaemia",
+                "FMD",
+                "HS"
+            ],
+            "Vaccination Time": [
+                "Once yearly",
+                "Once yearly",
+                "Once yearly",
+                "Every 6 months",
+                "Once yearly"
+            ]
+        })
+
+        st.success("✅ Vaccinate kids after recommended age.")
+        st.success("✅ Keep newly vaccinated animals stress-free.")
+        st.success("✅ Deworm regularly.")
+        st.info("💡 Provide clean drinking water after vaccination.")
+
+    elif animal == "🐑 Sheep":
+
+        st.subheader("🐑 Sheep Vaccination Schedule")
+
+        st.table({
+            "Disease": [
+                "PPR",
+                "Sheep Pox",
+                "Enterotoxaemia",
+                "FMD",
+                "HS"
+            ],
+            "Vaccination Time": [
+                "Once yearly",
+                "Once yearly",
+                "Once yearly",
+                "Every 6 months",
+                "Once yearly"
+            ]
+        })
+
+        st.success("✅ Vaccinate before disease season.")
+        st.success("✅ Avoid overcrowding after vaccination.")
+        st.success("✅ Maintain proper nutrition.")
+        st.info("💡 Record all vaccination dates.")
+
+    elif animal == "🐖 Pig":
+
+        st.subheader("🐖 Pig Vaccination Schedule")
+
+        st.table({
+            "Disease": [
+                "Classical Swine Fever",
+                "Swine Erysipelas",
+                "FMD",
+                "Parvovirus (Breeding Animals)",
+                "Leptospirosis (Risk Area)"
+            ],
+            "Vaccination Time": [
+                "Once yearly",
+                "Once yearly",
+                "Every 6 months",
+                "As advised by veterinarian",
+                "As advised by veterinarian"
+            ]
+        })
+
+        st.success("✅ Vaccinate piglets at appropriate age.")
+        st.success("✅ Keep pens clean and dry.")
+        st.success("✅ Isolate sick animals immediately.")
+        st.info("💡 Follow veterinarian's vaccination protocol.")
+
+    st.markdown("---")
+
+    st.subheader("📌 General Vaccination Tips")
+
+    st.success("✅ Store vaccines at 2-8°C.")
+    st.success("✅ Use sterile needles and syringes.")
+    st.success("✅ Vaccinate only healthy animals.")
+    st.success("✅ Keep vaccination records.")
+    st.success("✅ Consult a veterinarian for local vaccination schedules.")
+
+    st.warning(
+        "⚠️ Vaccination schedules may vary depending on disease prevalence, region, and government guidelines."
+    )
 # =========================================
 # AI VETERINARY ASSISTANT
 # =========================================
