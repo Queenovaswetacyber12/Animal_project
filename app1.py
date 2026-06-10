@@ -681,26 +681,27 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
     search_disease = st.text_input(
         "🔍 রোগের নাম লিখুন | Search Disease Information"
     )
+
     if search_disease:
 
-    try:
+        try:
 
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {API_KEY}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-                "messages": [
-                    {
-                        "role": "system",
-                        "content": "You are a veterinary disease information assistant. Answer only in Bengali."
-                    },
-                    {
-                        "role": "user",
-                        "content": f"""
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": "You are a veterinary disease information assistant. Answer only in Bengali."
+                        },
+                        {
+                            "role": "user",
+                            "content": f"""
 পশুর রোগ: {search_disease}
 
 বাংলায় নিম্নলিখিত শিরোনামে উত্তর দাও:
@@ -712,30 +713,30 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 5. চিকিৎসা
 6. প্রতিরোধ
 """
-                    }
-                ]
-            },
-            timeout=60
-        )
+                        }
+                    ]
+                },
+                timeout=60
+            )
 
-        response.raise_for_status()
+            response.raise_for_status()
 
-        data = response.json()
+            data = response.json()
 
-        if "choices" in data:
+            if "choices" in data:
 
-            reply = data["choices"][0]["message"]["content"]
+                reply = data["choices"][0]["message"]["content"]
 
-            st.markdown(reply)
+                st.markdown(reply)
 
-        else:
+            else:
 
-            st.error("No response received from AI model.")
+                st.error("No response received from AI model.")
 
-    except Exception as e:
+        except Exception as e:
 
-        st.error(f"Error: {e}")
-  
+            st.error(f"Error: {e}")
+
     if search_disease:
         search_disease = search_disease.lower()
     else:
