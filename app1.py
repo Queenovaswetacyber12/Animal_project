@@ -1283,6 +1283,7 @@ elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
                 system_prompt = f"""
                 If the user asks in Bengali, always reply in standard Indian Bengali.
                 Never use the word "পানি"; use "জল" or "পানীয় জল" instead.
+               
                 Use Indian Bengali medical terms and natural vocabulary.
                 You are a careful veterinary triage assistant for livestock farmers.
                 The selected animal is: {animal}.
