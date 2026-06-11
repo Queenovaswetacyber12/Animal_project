@@ -162,7 +162,6 @@ input::placeholder {
     color: #6b7280 !important;
     opacity: 1 !important;
 }
-
 /* SELECT BOX */
 
 div[data-baseweb="select"] > div {
