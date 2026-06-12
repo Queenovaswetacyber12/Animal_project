@@ -1,4 +1,3 @@
-
 import streamlit as st
 import numpy as np
 import requests
@@ -19,35 +18,101 @@ st.set_page_config(
     page_icon="🐄",
     layout="wide"
 )
+
+# Custom premium UI style adjustments to address alignment shown in Screenshot (23).jpg
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* Sidebar radio text */
-div[role="radiogroup"] label {
-    font-size: 13px !important;
-    line-height: 1.1 !important;
+/* Global Font Adjustment */
+html, body, [data-testid="stAppViewContainer"], .stApp {
+    font-family: 'Poppins', 'Segoe UI', sans-serif !important;
 }
 
-/* Sidebar title */
-section[data-testid="stSidebar"] h1 {
-    font-size: 32px !important;
-}
-
-/* Sidebar caption */
+/* PREMIUM SIDEBAR OVERHAUL (Fixes layout flaws in Screenshot (23).jpg) */
 section[data-testid="stSidebar"] {
-    padding-top: 10px !important;
+    background: linear-gradient(180deg, #064e3b 0%, #0f766e 100%) !important;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+    padding-top: 15px !important;
 }
 
-</style>
-""", unsafe_allow_html=True)
-# =========================================
-# COLORFUL MOBILE UI
-# ==========================================
-st.markdown("""
-<style>
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Transform radio group items into clean, clickable UI blocks */
+div[role="radiogroup"] {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 0;
+}
+
+div[role="radiogroup"] label {
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    margin: 0 !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease-in-out !important;
+}
+
+/* Strip native round selection button markers completely */
+div[role="radiogroup"] label div[data-testid="stMarkdownContainer"]::before {
+    content: none !important;
+}
+div[role="radiogroup"] label [width] {
+    display: none !important;
+}
+
+/* Highlight style for the currently chosen selection block */
+div[role="radiogroup"] [data-checked="true"] {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+}
+
+div[role="radiogroup"] label:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+
+div[role="radiogroup"] label p {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+}
+
+/* TOP BREADCRUMB NAVIGATION UI BAR */
+.app-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f1f5f9;
+    padding: 10px 18px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+.app-breadcrumb a {
+    color: #16a34a;
+    text-decoration: none;
+}
+.app-breadcrumb .crumb-split {
+    color: #cbd5e1;
+}
+.app-breadcrumb .active-node {
+    color: #334155;
+    font-weight: 600;
+}
 
 /* MAIN BACKGROUND */
-
 .stApp {
     background: linear-gradient(
         135deg,
@@ -55,11 +120,9 @@ st.markdown("""
         #96e6a1,
         #84fab0
     );
-    font-family: 'Segoe UI', sans-serif;
 }
 
 /* MAIN CONTAINER */
-
 .block-container {
     background: white;
     width: min(100%, 1180px);
@@ -70,7 +133,6 @@ st.markdown("""
 }
 
 /* MAIN TEXT */
-
 .block-container p,
 .block-container li,
 .block-container div,
@@ -86,7 +148,6 @@ st.markdown("""
 }
 
 /* TITLE */
-
 h1 {
     color: #16a34a !important;
     text-align: center;
@@ -95,43 +156,23 @@ h1 {
 }
 
 /* HEADINGS */
-
 h2, h3 {
     color: #15803d !important;
     font-weight: 800 !important;
     overflow-wrap: anywhere;
 }
 
-/* SIDEBAR */
-
-section[data-testid="stSidebar"] {
-
-    background: linear-gradient(
-        180deg,
-        #15803d,
-        #22c55e
-    );
-}
-
-section[data-testid="stSidebar"] * {
-    color: white !important;
-}
-
 /* BUTTON */
-
 .stButton button {
-
     width: min(100%, 220px);
     border: none;
     border-radius: 15px;
     padding: 12px;
-
     background: linear-gradient(
         90deg,
         #16a34a,
         #22c55e
     );
-
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -145,10 +186,8 @@ section[data-testid="stSidebar"] * {
 }
 
 /* INPUT BOX */
-
 .stNumberInput input,
 textarea {
-
     border-radius: 12px !important;
     border: 2px solid #22c55e !important;
     padding: 10px !important;
@@ -162,8 +201,8 @@ input::placeholder {
     color: #6b7280 !important;
     opacity: 1 !important;
 }
-/* SELECT BOX */
 
+/* SELECT BOX */
 div[data-baseweb="select"] > div {
     background: #ffffff !important;
     border: 2px solid #22c55e !important;
@@ -186,7 +225,6 @@ div[role="option"]:hover {
 }
 
 /* CHAT */
-
 div[data-testid="stChatInput"] {
     width: min(100%, 1100px) !important;
     margin: 0 auto !important;
@@ -214,9 +252,7 @@ img {
 }
 
 /* MOBILE */
-
 @media (max-width: 768px) {
-
     .stApp {
         background: #ffffff;
     }
@@ -258,7 +294,6 @@ img {
         padding: 8px 0 !important;
     }
 }
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -267,33 +302,46 @@ img {
 # =========================================
 
 API_KEY = os.getenv("API_KEY", "").strip()
+
 # =========================================
 # SIDEBAR MENU
 # =========================================
 
-st.sidebar.title("🐄 Livestock Menu")
+st.sidebar.markdown("<h2 style='text-align: center; color: white; font-weight:700; margin-bottom: 20px;'>🐄 Livestock Pro</h2>", unsafe_allow_html=True)
 
 menu = st.sidebar.radio(
-"অপশন নির্বাচন করুন | Choose Option",
-
+    "Choose Option",
     [
-        "🏠 হোম | Home",
-        "📐 গার্থ ও লেন্থ মাপার নিয়ম",
-        "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator",
-        "🐄 স্মার্ট পশুপালন | Smart Animal Husbandry",
-        "🩺 রোগ সম্পর্কিত তথ্য | Disease Info",
-        "🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker",
-        "🥬 খাদ্য পরামর্শ | Feeding Tips",
-        "💉 টিকা নির্দেশিকা | Vaccination Guide",
-        "🤖 AI পশু চিকিৎসা সহায়ক",
-        "ℹ️ অ্যাপ সম্পর্কে | About App"
-    ]
-  )
+        "Home Workspace",
+        "Measurement Protocols",
+        "Live Weight Calculator",
+        "Smart Husbandry Strategy",
+        "Disease Information Base",
+        "Symptom Checker Engine",
+        "Nutritional Feeding Manuals",
+        "Vaccination Guide Matrix",
+        "AI Veterinary Assistant Space",
+        "Infrastructure Metadata Info"
+    ],
+    label_visibility="collapsed"
+)
+
+# Dynamic Breadcrumb Template Injection
+def render_app_breadcrumb(current_view_node):
+    st.markdown(f"""
+    <div class="app-breadcrumb">
+        <a href="#">Livestock Workspace</a>
+        <span class="crumb-split">/</span>
+        <span class="active-node">{current_view_node}</span>
+    </div>
+    """, unsafe_allow_html=True)
+
 # =========================================
 # HOME PAGE
 # =========================================
 
-if menu == "🏠 হোম | Home":
+if menu == "Home Workspace":
+    render_app_breadcrumb("Home Dashboard")
 
     st.markdown(
         "<h1>🐄 Livestock AI Assistant</h1>",
@@ -335,7 +383,8 @@ if menu == "🏠 হোম | Home":
 # HOW TO MEASURE GIRTH & LENGTH
 # =========================================
 
-elif menu == "📐 গার্থ ও লেন্থ মাপার নিয়ম":
+elif menu == "Measurement Protocols":
+    render_app_breadcrumb("Measurement Protocols Guide")
 
     st.header("📐 How To Measure Heart Girth & length")
 
@@ -424,7 +473,8 @@ Use both measurements in the Live Weight Calculator.
 # LIVE WEIGHT CALCULATOR
 # =========================================
 
-elif menu == "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator":
+elif menu == "Live Weight Calculator":
+    render_app_breadcrumb("Live Weight Calculator")
 
     st.header("📏 Animal Live Weight Calculator")
 
@@ -617,6 +667,7 @@ elif menu == "📏 লাইভ ওয়েট ক্যালকুলেট�
 # =========================================
 
 elif menu == "💰 Market Price Information":
+    render_app_breadcrumb("Market Valuation Data")
 
     st.header("💰 Market Price Information")
 
@@ -630,7 +681,8 @@ elif menu == "💰 Market Price Information":
 #🐄 স্মার্ট পশুপালন | Smart Animal Husbandry
 #========================================
 
-elif menu == "🐄 স্মার্ট পশুপালন | Smart Animal Husbandry":
+elif menu == "Smart Husbandry Strategy":
+        render_app_breadcrumb("Smart Animal Husbandry Strategy")
         st.write ("smart section loaded") 
         st.header("🐄 স্মার্ট পশুপালন | Smart Animal Husbandry")
 
@@ -674,7 +726,8 @@ elif menu == "🐄 স্মার্ট পশুপালন | Smart Animal Hu
 # =========================================
 # DISEASE INFO
 # =========================================
-elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease Info":
+elif menu == "Disease Information Base":
+    render_app_breadcrumb("Disease Database Reference")
 
     st.header("🩺 রোগ সম্পর্কিত তথ্য | Disease Info")
 
@@ -701,18 +754,7 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
                         },
                         {
                             "role": "user",
-                            "content": f"""
-পশুর রোগ: {search_disease}
-
-বাংলায় নিম্নলিখিত শিরোনামে উত্তর দাও:
-
-1. রোগের পরিচিতি
-2. কারণ
-3. লক্ষণ
-4. রোগ নির্ণয়
-5. চিকিৎসা
-6. প্রতিরোধ
-"""
+                            "content": f"পশুর রোগ: {search_disease}\n\nবাংলায় নিম্নলিখিত শিরোনামে উত্তর দাও:\n\n1. রোগের পরিচিতি\n2. কারণ\n3. লক্ষণ\n4. রোগ নির্ণয়\n5. চিকিৎসা\n6. প্রতিরোধ\n"
                         }
                     ]
                 },
@@ -801,7 +843,8 @@ elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease 
 #============================================
 #"🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker",
 #=============================================
-elif menu == "🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker":
+elif menu == "Symptom Checker Engine":
+    render_app_breadcrumb("AI Symptom Checker Workspace")
 
     st.header("🔍 লক্ষণ দেখে রোগ শনাক্ত | AI Symptom Checker")
 
@@ -879,12 +922,7 @@ Important:
                                 },
                                 {
                                     "role": "user",
-                                    "content": f"""
-Animal: {animal}
-
-Symptoms:
-{symptom_text}
-"""
+                                    "content": f"Animal: {animal}\n\nSymptoms:\n{symptom_text}\n"
                                 }
                             ]
                         }
@@ -916,7 +954,8 @@ Symptoms:
 # FEEDING TIPS
 # =========================================
 
-elif menu == "🥬 খাদ্য পরামর্শ | Feeding Tips":
+elif menu == "Nutritional Feeding Manuals":
+    render_app_breadcrumb("Nutritional Management Rules")
 
     st.header("🥬 খাদ্য পরামর্শ | Feeding Tips")
 
@@ -945,7 +984,7 @@ elif menu == "🥬 খাদ্য পরামর্শ | Feeding Tips":
 
 🥣 দানাদার খাদ্য: প্রতি 2-3 লিটার দুধের জন্য 1 কেজি
 
-🧂 মিনারেল মিক্সচার: 50-60 গ্রাম/দিন
+🧂 মিনারেল মিক্সচার: 50-60 gram/day
 
 💧 40-70 লিটার পরিষ্কার জল
 
@@ -1079,7 +1118,8 @@ elif menu == "🥬 খাদ্য পরামর্শ | Feeding Tips":
 # VACCINATION GUIDE
 # =========================================
 
-elif menu == "💉 টিকা নির্দেশিকা | Vaccination Guide":
+elif menu == "Vaccination Guide Matrix":
+    render_app_breadcrumb("Prophylaxis & Vaccination Schedules")
 
     st.header("💉 টিকা নির্দেশিকা | Vaccination Guide")
 
@@ -1214,7 +1254,8 @@ elif menu == "💉 টিকা নির্দেশিকা | Vaccination Gui
 # AI VETERINARY ASSISTANT
 # =========================================
 
-elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
+elif menu == "AI Veterinary Assistant Space":
+    render_app_breadcrumb("Conversational Logic Assistance Terminal")
 
     st.header("🤖 AI Veterinary Assistant")
 
@@ -1384,7 +1425,8 @@ elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
 # ABOUT APP
 # =========================================
 
-elif menu == "ℹ️ অ্যাপ সম্পর্কে | About App":
+elif menu == "Infrastructure Metadata Info":
+    render_app_breadcrumb("Application Parameters Documentation")
 
     st.header("ℹ️ About App")
 
