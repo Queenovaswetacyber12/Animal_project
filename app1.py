@@ -1,378 +1,853 @@
+
 import streamlit as st
 import numpy as np
 import requests
 import json
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
-# Load Environment Variables safely
 load_dotenv(Path(__file__).with_name(".env"))
 
 # ==========================================
-# PAGE INITIALIZATION & PRO THEME SETUP
+# PAGE CONFIG
 # =========================================
 
 st.set_page_config(
     page_title="Livestock AI Assistant",
     page_icon="🐄",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
-
-# Premium Mobile-First Custom CSS Injection 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap');
-    
-    /* Global Base UI Engine Resets */
-    html, body, [data-testid="stAppViewContainer"] {
-        font-family: 'Poppins', sans-serif;
-        background-color: #f8fafc;
-        color: #1e293b;
-    }
-    
-    /* Main Content Container Optimization */
-    .block-container {
+
+/* Sidebar radio text */
+div[role="radiogroup"] label {
+    font-size: 13px !important;
+    line-height: 1.1 !important;
+}
+
+/* Sidebar title */
+section[data-testid="stSidebar"] h1 {
+    font-size: 32px !important;
+}
+
+/* Sidebar caption */
+section[data-testid="stSidebar"] {
+    padding-top: 10px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+# =========================================
+# COLORFUL MOBILE UI
+# ==========================================
+st.markdown("""
+<style>
+
+/* MAIN BACKGROUND */
+
+.stApp {
+    background: linear-gradient(
+        135deg,
+        #d4fc79,
+        #96e6a1,
+        #84fab0
+    );
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* MAIN CONTAINER */
+
+.block-container {
+    background: white;
+    width: min(100%, 1180px);
+    padding: clamp(14px, 3vw, 24px);
+    border-radius: 25px;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.12);
+    color: #1f2937;
+}
+
+/* MAIN TEXT */
+
+.block-container p,
+.block-container li,
+.block-container div,
+.block-container label,
+.block-container span {
+    color: #1f2937 !important;
+}
+
+.block-container .stAlert p,
+.block-container .stAlert div,
+.block-container .stAlert span {
+    color: #14532d !important;
+}
+
+/* TITLE */
+
+h1 {
+    color: #16a34a !important;
+    text-align: center;
+    font-size: clamp(28px, 5vw, 42px) !important;
+    font-weight: 900 !important;
+}
+
+/* HEADINGS */
+
+h2, h3 {
+    color: #15803d !important;
+    font-weight: 800 !important;
+    overflow-wrap: anywhere;
+}
+
+/* SIDEBAR */
+
+section[data-testid="stSidebar"] {
+
+    background: linear-gradient(
+        180deg,
+        #15803d,
+        #22c55e
+    );
+}
+
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* BUTTON */
+
+.stButton button {
+
+    width: min(100%, 220px);
+    border: none;
+    border-radius: 15px;
+    padding: 12px;
+
+    background: linear-gradient(
+        90deg,
+        #16a34a,
+        #22c55e
+    );
+
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    min-height: 48px;
+    white-space: normal;
+}
+
+.stButton button,
+.stButton button * {
+    color: white !important;
+}
+
+/* INPUT BOX */
+
+.stNumberInput input,
+textarea {
+
+    border-radius: 12px !important;
+    border: 2px solid #22c55e !important;
+    padding: 10px !important;
+    font-size: 17px !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+textarea::placeholder,
+input::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+/* SELECT BOX */
+
+div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    border: 2px solid #22c55e !important;
+    border-radius: 12px !important;
+}
+
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] div {
+    color: #111827 !important;
+}
+
+div[role="listbox"],
+div[role="option"] {
+    background: #ffffff !important;
+    color: #111827 !important;
+}
+
+div[role="option"]:hover {
+    background: #dcfce7 !important;
+}
+
+/* CHAT */
+
+div[data-testid="stChatInput"] {
+    width: min(100%, 1100px) !important;
+    margin: 0 auto !important;
+    padding: 10px !important;
+}
+
+div[data-testid="stChatInput"] textarea {
+    min-height: 52px !important;
+    color: #111827 !important;
+    background: #ffffff !important;
+}
+
+div[data-testid="stChatInput"] textarea::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
+}
+
+div[data-testid="stChatMessage"] {
+    overflow-wrap: anywhere;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+    .stApp {
         background: #ffffff;
-        max-width: 1160px !important;
-        padding: 2rem 2.5rem !important;
-        margin-top: 1rem;
-        border-radius: 24px;
-        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
-    }
-    
-    /* Premium Sidebar UI Layout Configuration */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #064e3b 0%, #0f766e 100%) !important;
-        box-shadow: 4px 0 25px rgba(0, 0, 0, 0.12);
-    }
-    
-    /* Modern Navigation Button Styling Override */
-    [data-testid="stSidebar"] div[role="radiogroup"] {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px 0;
-    }
-    
-    [data-testid="stSidebar"] div[role="radiogroup"] label {
-        background: rgba(255, 255, 255, 0.04) !important;
-        padding: 14px 18px !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        margin: 0 !important;
-        width: 100% !important;
-        cursor: pointer !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-    
-    /* Clear native radio elements to create UI list item appearance */
-    [data-testid="stSidebar"] div[role="radiogroup"] label div[data-testid="stMarkdownContainer"]::before {
-        content: none !important;
-    }
-    [data-testid="stSidebar"] div[role="radiogroup"] label [width] {
-        display: none !important;
-    }
-    
-    /* Active / Selected Tab State Indicator */
-    [data-testid="stSidebar"] div[role="radiogroup"] [data-checked="true"] {
-        background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3) !important;
-        transform: scale(1.02);
-    }
-    
-    /* Item Hover States */
-    [data-testid="stSidebar"] div[role="radiogroup"] label:hover {
-        background: rgba(255, 255, 255, 0.12) !important;
-    }
-    
-    /* Navigation Text Settings */
-    [data-testid="stSidebar"] div[role="radiogroup"] label p {
-        color: #ffffff !important;
-        font-size: 14px !important;
-        font-weight: 500 !important;
-        letter-spacing: 0.3px;
     }
 
-    /* Enterprise Breadcrumb CSS Component Blueprint */
-    .pro-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        background: #f1f5f9;
-        padding: 10px 18px;
-        border-radius: 10px;
-        margin-bottom: 2rem;
-        font-size: 14px;
-        font-weight: 500;
-        color: #64748b;
-    }
-    .pro-breadcrumb a {
-        color: #10b981;
-        text-decoration: none;
-    }
-    .pro-breadcrumb span.separator {
-        color: #cbd5e1;
-    }
-    .pro-breadcrumb span.current {
-        color: #334155;
-        font-weight: 600;
-    }
-    
-    /* Interactive Card Interface Wrapper */
-    .pro-card {
-        background: #f8fafc;
-        padding: 1.5rem;
-        border-radius: 16px;
-        border-left: 5px solid #10b981;
-        margin-bottom: 1.25rem;
-    }
-    
-    /* Buttons Custom Layout UI */
-    .stButton > button {
-        width: 100% !important;
-        background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important;
-        color: white !important;
-        font-weight: 600 !important;
-        padding: 0.75rem 1.5rem !important;
-        border-radius: 12px !important;
-        border: none !important;
-        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15) !important;
-        transition: all 0.2s ease;
-    }
-    .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25) !important;
+    .block-container {
+        padding: 12px;
+        border-radius: 0;
+        box-shadow: none;
+        min-width: 0;
     }
 
-    /* Input Field Theme Adjustments */
-    div[data-baseweb="select"], .stNumberInput input, textarea {
-        background-color: #ffffff !important;
-        border: 2px solid #e2e8f0 !important;
-        border-radius: 12px !important;
-        color: #1a202c !important;
+    h1 {
+        font-size: 28px !important;
+        line-height: 1.15 !important;
     }
 
-    /* Adaptive Mobile Optimization Views */
-    @media (max-width: 768px) {
-        .block-container {
-            margin-top: 0 !important;
-            padding: 1rem !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-        }
+    h2, h3 {
+        font-size: 22px !important;
+        line-height: 1.2 !important;
     }
+
+    .stButton button {
+        width: 100%;
+        font-size: 16px;
+    }
+
+    div[data-baseweb="select"] > div,
+    .stNumberInput input,
+    textarea {
+        min-height: 48px !important;
+        font-size: 16px !important;
+    }
+
+    div[data-testid="stChatInput"] {
+        padding: 8px !important;
+    }
+
+    div[data-testid="stChatMessage"] {
+        padding: 8px 0 !important;
+    }
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-# Secure Extraction of API Credentials
+# =========================================
+# API KEY
+# =========================================
+
 API_KEY = os.getenv("API_KEY", "").strip()
-
 # =========================================
-# APPLICATION NAVIGATION (SIDEBAR)
+# SIDEBAR MENU
 # =========================================
 
-with st.sidebar:
-    st.markdown("<h2 style='text-align: center; color: white; font-weight:700; margin-top:15px; margin-bottom: 25px;'>🐄 Livestock Pro</h2>", unsafe_allow_html=True)
-    
-    # Clean, English-Only Selection Node Array to avoid UI overlap issues
-    menu = st.radio(
-        "Navigation Menu",
-        [
-            "Home Dashboard",
-            "Measurement Guide",
-            "Live Weight Calculator",
-            "Smart Husbandry Strategy",
-            "Disease Information Database",
-            "Symptom Checker Engine",
-            "Nutritional Feeding Manuals",
-            "Vaccination Matrix Protocol",
-            "AI Veterinary Assistant Chat",
-            "Application Infrastructure Info"
-        ],
-        label_visibility="collapsed"
+st.sidebar.title("🐄 Livestock Menu")
+
+menu = st.sidebar.radio(
+"অপশন নির্বাচন করুন | Choose Option",
+
+    [
+        "🏠 হোম | Home",
+        "📐 গার্থ ও লেন্থ মাপার নিয়ম",
+        "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator",
+        "🐄 স্মার্ট পশুপালন | Smart Animal Husbandry",
+        "🩺 রোগ সম্পর্কিত তথ্য | Disease Info",
+        "🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker",
+        "🥬 খাদ্য পরামর্শ | Feeding Tips",
+        "💉 টিকা নির্দেশিকা | Vaccination Guide",
+        "🤖 AI পশু চিকিৎসা সহায়ক",
+        "ℹ️ অ্যাপ সম্পর্কে | About App"
+    ]
+  )
+# =========================================
+# HOME PAGE
+# =========================================
+
+if menu == "🏠 হোম | Home":
+
+    st.markdown(
+        "<h1>🐄 Livestock AI Assistant</h1>",
+        unsafe_allow_html=True
     )
 
-# =========================================
-# HELPER METHOD: BREADCRUMB RENDERING ENGINE
-# =========================================
-
-def render_breadcrumb(current_node_title):
-    st.markdown(f"""
-    <div class="pro-breadcrumb">
-        <a href="#">Livestock App Workspace</a>
-        <span class="separator">/</span>
-        <span class="current">{current_node_title}</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-# =========================================
-# MODULE 1: INTERACTIVE HOME DASHBOARD
-# =========================================
-
-if menu == "Home Dashboard":
-    render_breadcrumb("Home Dashboard")
-    st.markdown("<h1 style='color: #0f172a; font-weight:800; margin-top: -10px;'>Livestock AI Assistant Workspace</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #64748b; font-size: 1.1rem;'>Calculate live weight matrices, monitor baseline structural parameters, and evaluate clinical symptoms through open reasoning networks.</p>", unsafe_allow_html=True)
+    st.title("🐄 Smart Animal Husbandry App")
     
-    st.markdown("---")
-    
+
+    st.write(
+        "Calculate live weight, market price and get veterinary support."
+    )
+
     col1, col2 = st.columns(2)
+
     with col1:
-        st.image("https://images.unsplash.com/photo-1500595046743-cd271d694d30", caption="Dairy Livestock Management Node", use_container_width=True)
+
+        st.image(
+            "https://images.unsplash.com/photo-1500595046743-cd271d694d30",
+            caption="🐄 Cow",
+            use_container_width=True
+        )
+
     with col2:
-        st.image("https://images.unsplash.com/photo-1524024973431-2ad916746881", caption="Caprine Livestock Management Node", use_container_width=True)
 
-    st.markdown("<br>### System Architecture Matrix Tools", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.info("**📱 Production Ready Build**\n\nResponsive layout adjustments for APK compilation wrappers and mobile viewports.")
-    with c2:
-        st.success("**⚖️ Dynamic Regression Formula**\n\nLive arithmetic calculators processing physical sizing data points instantly.")
-    with c3:
-        st.warning("**🤖 Reasoning AI Layer**\n\nCloud pipeline models interpreting symptomatic descriptions.")
+        st.image(
+            "https://images.unsplash.com/photo-1524024973431-2ad916746881",
+            caption="🐐 Goat",
+            use_container_width=True
+        )
 
+    st.success("✅ Mobile Friendly UI")
+
+    st.success("✅ Goat & Pig Market Price")
+
+    st.success("✅ Veterinary AI Assistant")
+
+#==========================================
+# HOW TO MEASURE GIRTH & LENGTH
 # =========================================
-# MODULE 2: MEASUREMENT PROTOCOLS
-# =========================================
 
-elif menu == "Measurement Guide":
-    render_breadcrumb("Measurement Protocols")
-    st.title("📐 Structural Measurement Configurations")
+elif menu == "📐 গার্থ ও লেন্থ মাপার নিয়ম":
+
+    st.header("📐 How To Measure Heart Girth & length")
+
+    st.info("""
+    Heart Girth:
+Measure the chest circumference just behind the front legs.
+
+Body Length:
+Measure from the point of the shoulder to the pin bone (rear end).
+
+Use both measurements in the Live Weight Calculator.
+    """)
     
-    st.markdown("""
-    <div class='pro-card'>
-        <h4>📌 Measurement Methodology Reference Guide</h4>
-        <p><b>Heart Girth:</b> Measure the global circumference around the chest casing immediately behind the front forelegs.</p>
-        <p><b>Body Length:</b> Measure the linear spacing stretching directly from the tip of the shoulder to the rear pin bone structure.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.subheader("🐄 Cow Measurement")
+
+    st.image(
+    "cow.jfif",
+    use_container_width=True
+)
+
+    st.subheader("🐐 Goat Measurement")
+
+    st.image(
+    "goat.jfif",
+    use_container_width=True
+)
+
+    st.subheader("🐖 Pig Measurement")
+
+    st.image(
+    "pig.jfif",
+    use_container_width=True
+)
+   
+    st.subheader("📏 Typical Heart Girth & body length Range")
     
-    st.subheader("📏 Standard Structural Matrix Ranges")
     st.table({
-        "Animal Archetype": ["Goat / Sheep", "Swine / Pig", "Cattle / Cow", "Dairy Buffalo", "Equine / Horse"],
-        "Optimal Girth Range (Inches)": ["20 - 40", "25 - 55", "45 - 90", "55 - 100", "50 - 85"],
-        "Optimal Length Range (Inches)": ["18 - 35", "25 - 50", "40 - 80", "45 - 90", "45 - 75"]
+    "Animal": [
+        "Goat",
+        "Pig",
+        "Cow",
+        "Buffalo",
+        "Horse"
+    ],
+
+    "Typical Girth (inch)": [
+        "20 - 40",
+        "25 - 55",
+        "45 - 90",
+        "55 - 100",
+        "50 - 85"
+    ],
+
+    "Typical Length (inch)": [
+        "18 - 35",
+        "25 - 50",
+        "40 - 80",
+        "45 - 90",
+        "45 - 75"
+    ]
     })
 
+    st.success("""
+    Example:
+
+    Goat Chest Size = 30 inch
+
+    Body Length = 28 inch
+
+    Enter these values in the Live Weight Calculator.
+    """)
+
+    st.warning("""
+    ✔️ Measure just behind the front legs
+
+    ✔️ Keep tape snug but not too tight
+
+    ✔️ Measure in inches
+
+    ✔️ Animal should stand normally
+    """)
+
+
+
 # =========================================
-# MODULE 3: WEIGHT CONVERSION ALGORITHMS
+# LIVE WEIGHT CALCULATOR
 # =========================================
 
-elif menu == "Live Weight Calculator":
-    render_breadcrumb("Live Weight Calculator")
-    st.title("📏 Automated Biomass Computational Engine")
-    
-    animal = st.selectbox("Select Target Animal Archetype", ["Cow", "Buffalo", "Horse", "Goat", "Pig"])
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        girth = st.number_input("Input Heart Girth Metric (Inches)", min_value=1.0, value=30.0, step=0.5)
-    with col2:
-        length = st.number_input("Input Body Length Metric (Inches)", min_value=1.0, value=28.0, step=0.5)
-        
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    if st.button("Execute Computational Analysis"):
+elif menu == "📏 লাইভ ওয়েট ক্যালকুলেটর | Live Weight Calculator":
+
+    st.header("📏 Animal Live Weight Calculator")
+
+    animal = st.selectbox(
+
+        "Select Animal",
+
+        [
+            "Cow",
+            "Buffalo",
+            "Horse",
+            "Goat",
+            "Pig"
+        ]
+    )
+
+    # =====================================
+    # ANIMAL IMAGES
+    # =====================================
+
+    if animal == "Cow":
+
+        st.image(
+            "https://images.unsplash.com/photo-1500595046743-cd271d694d30",
+            caption="🐄 Cow",
+            use_container_width=True
+        )
+
+    elif animal == "Buffalo":
+
+        st.image(
+            "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e",
+            caption="🐃 Buffalo",
+            use_container_width=True
+        )
+
+    elif animal == "Horse":
+
+        st.image(
+            "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a",
+            caption="🐎 Horse",
+            use_container_width=True
+        )
+
+    elif animal == "Goat":
+
+        st.image(
+            "https://images.unsplash.com/photo-1524024973431-2ad916746881",
+            caption="🐐 Goat",
+            use_container_width=True
+        )
+
+    elif animal == "Pig":
+
+        st.image(
+            "https://images.unsplash.com/photo-1516467508483-a7212febe31a",
+            caption="🐖 Pig",
+            use_container_width=True
+        )
+
+    # =====================================
+    # INPUT
+    # =====================================
+
+    girth = st.number_input(
+        "Enter Heart Girth / Chest Size (inch)",
+        min_value=1.0
+    )
+
+    st.caption(
+    "📏 Measure chest circumference just behind the front legs."
+    )
+    length = st.number_input(
+        "Enter Body Length (inch)",
+        min_value=1.0
+    )
+     
+    # =====================================
+    # CALCULATE BUTTON
+    # =====================================
+
+    if st.button("Calculate Live Weight"):
+
+        # =====================================
+        # GOAT
+        # =====================================
+
         if animal == "Goat":
-            base_lbs = (girth * girth * length) / 630
-            weight_kg = base_lbs * 0.453592 * 2  
-            rate = 450 if weight_kg < 20 else (500 if weight_kg < 40 else (550 if weight_kg < 60 else 600))
+
+            # UNIVERSAL GOAT FORMULA
+
+            weight = (
+                girth * girth * length
+            ) / 630
+
+            # REALISTIC LIVE WEIGHT ADJUSTMENT
+
+            weight = (
+                weight * 0.453592 * 2
+            )
+
+            # GOAT MARKET RATE
+
+            if weight < 20:
+
+                rate = 450
+
+            elif weight < 40:
+
+                rate = 500
+
+            elif weight < 60:
+
+                rate = 550
+
+            else:
+
+                rate = 600
+
+            market_price = weight * rate
+
+            st.success(
+                f"Estimated Live Weight: {weight:.2f} KG"
+            )
+
+            st.info(
+                f"Market Rate: ₹{rate} per KG"
+            )
+
+            st.success(
+                f"Estimated Market Price: ₹{market_price:.2f}"
+            )
+
+        # =====================================
+        # PIG
+        # =====================================
+
         elif animal == "Pig":
-            base_lbs = (girth * girth * length) / 800
-            weight_kg = base_lbs * 0.453592
-            rate = 180 if weight_kg < 40 else (220 if weight_kg < 80 else 280)
+
+            weight = (
+                girth * girth * length
+            ) / 800
+
+            weight = weight * 0.453592
+
+            if weight < 40:
+
+                rate = 180
+
+            elif weight < 80:
+
+                rate = 220
+
+            else:
+
+                rate = 280
+
+            market_price = weight * rate
+
+            st.success(
+                f"Estimated Pig Live Weight: {weight:.2f} KG"
+            )
+
+            st.info(
+                f"Pig Market Rate: ₹{rate} per KG"
+            )
+
+            st.success(
+                f"Estimated Pig Market Price: ₹{market_price:.2f}"
+            )
+
+        # =====================================
+        # OTHER ANIMALS
+        # =====================================
+
         else:
-            base_lbs = (girth * girth * length) / 660
-            weight_kg = base_lbs * 0.453592
-            rate = 0 
-            
-        st.markdown("### 📊 Computation Calculations Results")
-        metric_col1, metric_col2 = st.columns(2)
-        metric_col1.metric("Calculated Mass Value (KG)", f"{weight_kg:.2f} KG")
-        
-        if rate > 0:
-            metric_col2.metric("Projected Financial Valuation", f"₹{(weight_kg * rate):,.2f}")
-            st.info(f"Target calculation mapped using local dynamic base rate of ₹{rate}/KG.")
-        else:
-            st.warning("Valuation complete. Market parameters for this asset category require localized manual updates.")
+
+            weight = (
+                girth * girth * length
+            ) / 660
+
+            weight = weight * 0.453592
+
+            st.success(
+                f"Estimated Live Weight: {weight:.2f} KG"
+            )
 
 # =========================================
-# MODULE 4: HUSBANDRY STRATEGY (BENGALI CORE WORKLIST)
+# MARKET PRICE
 # =========================================
 
-elif menu == "Smart Husbandry Strategy":
-    render_breadcrumb("Smart Husbandry Strategy")
-    st.title("🐄 স্মার্ট পশুপালন | Optimization Parameters")
-    
-    st.markdown("""
-    <div class='pro-card'>
-        <h3>🏠 ১. খামার পরিকাঠামো ও পরিচ্ছন্নতা</h3>
-        <p>বায়ু চলাচল ব্যবস্থার আধুনিকায়ন নিশ্চিত করুন। জীবাণুনাশক প্রয়োগ চক্র নিয়মিত বজায় রাখুন।</p>
-    </div>
-    <div class='pro-card'>
-        <h3>🌾 ২. বৈজ্ঞানিক খাদ্য পুষ্টি উপাদান</h3>
-        <p>সবুজ ঘাস এবং দানাদার সুষম মিশ্রণ দিন। প্রতিটি পশুর শরীরের ওজনের সমতুল্য পরিচ্ছন্ন পানীয় জল সরবরাহ নিশ্চিত করুন।</p>
-    </div>
-    <div class='pro-card'>
-        <h3>🩺 ৩. বায়ো-সিকিউরিটি প্রোটোকল</h3>
-        <p>পরজীবী দমন প্রোটোকল মেনে চলুন। সংক্রমণ পরিলক্ষিত হলে দ্রুত কোয়ারেন্টাইন ব্যবস্থা গ্রহণ করুন।</p>
-    </div>
-    """, unsafe_allow_html=True)
+elif menu == "💰 Market Price Information":
+
+    st.header("💰 Market Price Information")
+
+    st.info("🐐 Goat Price: ₹400 - ₹650 per KG")
+
+    st.info("🐖 Pig Price: ₹180 - ₹280 per KG")
+
+    st.info("🐄 Cow Price depends on local market")
+
+#=========================================
+#🐄 স্মার্ট পশুপালন | Smart Animal Husbandry
+#========================================
+
+elif menu == "🐄 স্মার্ট পশুপালন | Smart Animal Husbandry":
+        st.write ("smart section loaded") 
+        st.header("🐄 স্মার্ট পশুপালন | Smart Animal Husbandry")
+
+        st.success("সফল ও লাভজনক পশুপালনের জন্য গুরুত্বপূর্ণ পরামর্শ")
+
+        st.markdown("""
+### 🏠 খামার ব্যবস্থাপনা
+✅ খামার পরিষ্কার ও শুকনো রাখুন
+
+✅ পর্যাপ্ত আলো-বাতাসের ব্যবস্থা করুন
+
+✅ নিয়মিত জীবাণুনাশক ব্যবহার করুন
+
+### 🌾 খাদ্য ব্যবস্থাপনা
+✅ সুষম খাদ্য প্রদান করুন
+
+✅ সবসময় পরিষ্কার পানি সরবরাহ করুন
+
+✅ বয়স ও ওজন অনুযায়ী খাদ্য দিন
+
+### 💉 স্বাস্থ্য পরিচর্যা
+✅ নিয়মিত টিকা প্রদান করুন
+
+✅ কৃমিনাশক প্রয়োগ করুন
+
+✅ অসুস্থ পশুকে আলাদা রাখুন
+
+### 🐄 প্রজনন ব্যবস্থাপনা
+✅ সঠিক সময়ে প্রজনন করান
+
+✅ গর্ভবতী পশুর বিশেষ যত্ন নিন
+
+### 📈 লাভ বৃদ্ধির উপায়
+✅ নিয়মিত ওজন পর্যবেক্ষণ করুন
+
+✅ উন্নত জাত নির্বাচন করুন
+
+✅ রোগ প্রতিরোধে গুরুত্ব দিন
+""")
 
 # =========================================
-# MODULE 5: INFERENCE ENGINE - DISEASE KNOWLEDGE
+# DISEASE INFO
 # =========================================
+elif menu == "🩺 রোগ সম্পর্কিত তথ্য | Disease Info":
 
-elif menu == "Disease Information Database":
-    render_breadcrumb("Disease Database Lookup")
-    st.title("🩺 Clinical Pathology Information Repository")
-    
-    search_disease = st.text_input("🔍 Search Nomenclature Input Vector (e.g., FMD, BQ, Anthrax)")
-    
+    st.header("🩺 রোগ সম্পর্কিত তথ্য | Disease Info")
+
+    search_disease = st.text_input(
+        "🔍 রোগের নাম লিখুন | Search Disease Information"
+    )
+
     if search_disease:
-        with st.spinner("Querying Remote Medical Datastores..."):
-            try:
-                response = requests.post(
-                    "https://openrouter.ai/api/v1/chat/completions",
-                    headers={
-                        "Authorization": f"Bearer {API_KEY}",
-                        "Content-Type": "application/json"
-                    },
-                    json={
-                        "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-                        "messages": [
-                            {"role": "system", "content": "You are a professional veterinary scientist expert system. Always answer in clear, elite standard Indian Bengali language using appropriate medical terminology."},
-                            {"role": "user", "content": f"রোগের বিবরণ দাও: {search_disease}. শিরোনাম: ১. রোগের পরিচিতি ২. প্রধান কারণ ৩. দৃশ্যমান লক্ষণ ৪. প্রাথমিক চিকিৎসা ও প্রতিরোধ"}
-                        ]
-                    },
-                    timeout=30
-                )
-                data = response.json()
-                if "choices" in data:
-                    st.markdown(f"<div class='pro-card'>{data['choices'][0]['message']['content']}</div>", unsafe_allow_html=True)
-            except Exception as e:
-                st.error(f"Inference Connection Timeout Error: {e}")
 
-# =========================================
-# MODULE 6: CLOUD AI DIAGNOSTICS DETECTOR
-# =========================================
+        try:
 
-elif menu == "Symptom Checker Engine":
-    render_breadcrumb("Symptom Analysis Matrix")
-    st.title("🔍 Automated AI Diagnostics Inference Engine")
-    
-    selected_animal = st.selectbox("Select Target Patient Family Profile", ["Cow", "Goat", "Buffalo", "Sheep", "Pig"])
-    symptoms = st.text_area("Detailed Diagnostic Symptom Inputs", placeholder="Enter observations: high temperature, foot lesions, salivation changes...")
-    
-    if st.button("Initialize Clinical Analysis Sequence"):
-        if not symptoms.strip():
-            st.warning("Input processing failed. Symptom log strings cannot be empty.")
+            response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": "You are a veterinary disease information assistant. Answer only in Bengali."
+                        },
+                        {
+                            "role": "user",
+                            "content": f"""
+পশুর রোগ: {search_disease}
+
+বাংলায় নিম্নলিখিত শিরোনামে উত্তর দাও:
+
+1. রোগের পরিচিতি
+2. কারণ
+3. লক্ষণ
+4. রোগ নির্ণয়
+5. চিকিৎসা
+6. প্রতিরোধ
+"""
+                        }
+                    ]
+                },
+                timeout=60
+            )
+
+            response.raise_for_status()
+
+            data = response.json()
+
+            if "choices" in data:
+
+                reply = data["choices"][0]["message"]["content"]
+
+                st.markdown(reply)
+
+            else:
+
+                st.error("No response received from AI model.")
+
+        except Exception as e:
+
+            st.error(f"Error: {e}")
+
+    if search_disease:
+        search_disease = search_disease.lower()
+    else:
+        search_disease = ""
+
+    # FMD
+    if search_disease == "" or "fmd" in search_disease:
+
+        st.subheader("🐄 FMD (Foot and Mouth Disease)")
+
+        st.info("""
+🔹 রোগের নাম: Foot and Mouth Disease (FMD)
+
+🦠 কারণ:
+ভাইরাসজনিত অত্যন্ত সংক্রামক রোগ।
+
+⚠️ লক্ষণ:
+* মুখে ঘা
+* অতিরিক্ত লালা ঝরা
+* জ্বর
+* খাওয়া কমে যাওয়া
+* খোঁড়া হয়ে হাঁটা
+
+💊 চিকিৎসা:
+* পশু চিকিৎসকের পরামর্শ নিন
+* জীবাণুনাশক ব্যবহার করুন
+* আক্রান্ত পশুকে আলাদা রাখুন
+
+🛡️ প্রতিরোধ:
+* নিয়মিত টিকা দিন
+* খামার পরিষ্কার রাখুন
+* নতুন পশু আনার আগে পর্যবেক্ষণ করুন
+""")
+
+    # Black Quarter
+    if (
+        search_disease == ""
+        or "bq" in search_disease
+        or "black quarter" in search_disease
+    ):
+
+        st.subheader("🐄 Black Quarter (BQ)")
+
+        st.warning("""
+🦠 কারণ:
+ব্যাকটেরিয়াজনিত মারাত্মক রোগ।
+
+⚠️ লক্ষণ:
+* হঠাৎ জ্বর
+* পেশী ফুলে যাওয়া
+* চলাফেরায় কষ্ট
+* খাওয়া বন্ধ
+
+💊 চিকিৎসা:
+* দ্রুত ভেটেরিনারি চিকিৎসা
+* অ্যান্টিবায়োটিক
+
+🛡️ প্রতিরোধ:
+* BQ টিকা প্রদান
+* পরিষ্কার পরিবেশ বজায় রাখা
+""")
+#============================================
+#"🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker",
+#=============================================
+elif menu == "🔍 লক্ষণ দেখে রোগ শনাক্ত | Symptom Checker":
+
+    st.header("🔍 লক্ষণ দেখে রোগ শনাক্ত | AI Symptom Checker")
+
+    st.info("লক্ষণ লিখুন, AI সম্ভাব্য রোগ সম্পর্কে প্রাথমিক ধারণা দেবে")
+
+    animal = st.selectbox(
+        "🐄 পশু নির্বাচন করুন | Select Animal",
+        [
+            "Cow",
+            "Goat",
+            "Buffalo",
+            "Sheep",
+            "Pig",
+            "Poultry"
+        ]
+    )
+
+    symptom_text = st.text_area(
+        "📝 লক্ষণ লিখুন",
+        height=150,
+        placeholder="""
+উদাহরণ:
+
+জ্বর আছে
+মুখ দিয়ে লালা পড়ছে
+খাবার খাচ্ছে না
+খুঁড়িয়ে হাঁটছে
+
+অথবা
+
+Fever, salivation, mouth lesion, lameness
+"""
+    )
+
+    if st.button("🔍 রোগ বিশ্লেষণ করুন"):
+
+        if symptom_text.strip() == "":
+
+            st.warning("অনুগ্রহ করে লক্ষণ লিখুন")
+
         else:
-            with st.spinner("Processing Symptom Feature Arrays..."):
+
+            with st.spinner("AI বিশ্লেষণ করছে..."):
+
                 try:
+
                     response = requests.post(
                         "https://openrouter.ai/api/v1/chat/completions",
                         headers={
@@ -382,144 +857,551 @@ elif menu == "Symptom Checker Engine":
                         json={
                             "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
                             "messages": [
-                                {"role": "system", "content": "You are a top-tier veterinary AI assistant. Use easy farmer-friendly Indian Bengali language. Do not use the word 'পানি', use 'জল' or 'পানীয় জল'."},
-                                {"role": "user", "content": f"Animal Type: {selected_animal}. Symptoms: {symptoms}."}
+                                {
+                                    "role": "system",
+                                    "content": """
+You are an expert veterinary assistant.
+
+Analyze the symptoms and provide:
+
+১. সম্ভাব্য রোগ
+২. রোগ হওয়ার কারণ
+৩. কতটা সম্ভাবনা (High/Medium/Low)
+৪. প্রাথমিক করণীয়
+৫. প্রতিরোধ ব্যবস্থা
+৬. কখন পশু চিকিৎসকের সাথে যোগাযোগ করতে হবে
+
+Important:
+- Use simple Bengali.
+- Farmer friendly language.
+- Mention that it is not a final diagnosis.
+"""
+                                },
+                                {
+                                    "role": "user",
+                                    "content": f"""
+Animal: {animal}
+
+Symptoms:
+{symptom_text}
+"""
+                                }
                             ]
                         }
                     )
-                    res_data = response.json()
-                    if "choices" in res_data:
-                        st.write(res_data['choices'][0]['message']['content'])
-                        st.markdown("---")
-                        st.warning("⚠️ **Notice Requirement:** This automated classification is an initial baseline suggestion only. Consult field professionals prior to therapeutic drug deployment.")
+
+                    result = response.json()
+
+                    if "choices" in result:
+
+                        answer = result["choices"][0]["message"]["content"]
+
+                        st.success("✅ বিশ্লেষণ সম্পন্ন")
+
+                        st.markdown(answer)
+
+                        st.warning(
+                            "⚠️ এটি শুধুমাত্র AI ভিত্তিক প্রাথমিক বিশ্লেষণ। নিশ্চিত রোগ নির্ণয়ের জন্য পশুচিকিৎসকের পরামর্শ নিন।"
+                        )
+
+                    else:
+
+                        st.error("AI থেকে উত্তর পাওয়া যায়নি")
+
                 except Exception as e:
-                    st.error(f"Transmission Path Failure: {e}")
+
+                    st.error(f"ত্রুটি: {e}")
 
 # =========================================
-# MODULE 7: ANIMAL CALORIC / FEEDING MANUALS
+# FEEDING TIPS
 # =========================================
 
-elif menu == "Nutritional Feeding Manuals":
-    render_breadcrumb("Nutritional Schedules")
-    st.title("🥬 Caloric Calculation & Feeding Requirements")
-    
-    tab1, tab2, tab3 = st.tabs(["🐄 Cattle Profiles", "🐐 Caprine / Small Ruminants", "🐔 Avian / Poultry Systems"])
-    
-    with tab1:
-        st.markdown("""
-        ### Core Daily Rations Configuration
-        * **Green Biomass Grass Range:** 15 - 25 KG adjusted against global body mass index.
-        * **Dry Cellulose Fodder / Hay:** 3 - 6 KG.
-        * **Balanced Dry Concentrates:** Add 1 KG for every 3 Liters of volumetric milk yield output.
-        * **Trace Mineral Elements:** 50 - 60 Grams continuously.
-        """)
-    with tab2:
-        st.markdown("""
-        ### Caprine Diet Structures
-        * **Principal Intake Vectors:** Tree foliage varieties, shrubbery browses, tender green ground flora.
-        * **Concentrate Additives:** 200 - 500 Grams daily for gestational or conditioning support cycles.
-        * **Hydration Elements:** Continuous provision of clean, non-contaminated drinking water.
-        """)
-    with tab3:
-        st.markdown("""
-        ### Structured Poultry Feeding Protocols
-        * **Starter Feed Rations:** Target developmental phase spanning Weeks 0 - 8.
-        * **Grower Feed Rations:** Target maintenance phase spanning Weeks 8 - 20.
-        * **Layer Feed Rations:** Optimal calcium enrichment structures engineered for production phases.
-        """)
+elif menu == "🥬 খাদ্য পরামর্শ | Feeding Tips":
 
+    st.header("🥬 খাদ্য পরামর্শ | Feeding Tips")
+
+    st.info("🐾 পশু ও পাখির জন্য সঠিক খাদ্য ব্যবস্থাপনা | Proper Feeding Management for Animals & Birds")
+
+    st.markdown("""
+### 💧 সাধারণ নির্দেশনা | General Feeding Tips
+
+✅ সবসময় পরিষ্কার ও বিশুদ্ধ  জল সরবরাহ করুন
+
+✅ ছাঁচযুক্ত, পচা বা দুর্গন্ধযুক্ত খাদ্য দেবেন না
+
+✅ খাদ্য ধীরে ধীরে পরিবর্তন করুন
+
+✅ সুষম খাদ্যের সাথে মিনারেল মিক্সচার ও লবণ ব্যবহার করুন
+
+✅ গর্ভবতী ও দুগ্ধদানকারী প্রাণীর জন্য অতিরিক্ত পুষ্টিকর খাদ্য দিন
+
+---
+
+### 🐄 গরু | Cattle
+
+🌿 সবুজ ঘাস: 15-25 কেজি/দিন
+
+🌾 শুকনা খড়: 3-6 কেজি/দিন
+
+🥣 দানাদার খাদ্য: প্রতি 2-3 লিটার দুধের জন্য 1 কেজি
+
+🧂 মিনারেল মিক্সচার: 50-60 গ্রাম/দিন
+
+💧 40-70 লিটার পরিষ্কার জল
+
+---
+
+### 🐃 মহিষ | Buffalo
+
+🌿 সবুজ ঘাস: 20-30 কেজি/দিন
+
+🌾 শুকনা খড়: 5-8 কেজি/দিন
+
+🥣 সুষম কনসেনট্রেট খাদ্য
+
+🧂 মিনারেল মিক্সচার
+
+💧 60-100 লিটারি জল
+
+---
+
+### 🐐 ছাগল | Goat
+
+🌿 ঘাস, লতা ও গাছের পাতা
+
+🌾 শুকনা খাদ্য
+
+🥣 200-500 গ্রাম কনসেনট্রেট
+
+🧂 মিনারেল মিক্সচার
+
+💧 পর্যাপ্ত পরিষ্কার জল
+
+
+
+---
+
+### 🐑 ভেড়া | Sheep
+
+🌿 চারণভূমির ঘাস
+
+🌾 শুকনা খড়
+
+🥣 প্রয়োজনে কনসেনট্রেট খাদ্য
+
+🧂 মিনারেল ও লবণ
+
+💧 পরিষ্কার জল
+
+---
+
+### 🐖 শূকর | Pig
+
+🌽 ভুট্টা, গম ও সুষম ফিড
+
+🥣 উচ্চ প্রোটিনযুক্ত খাদ্য
+
+🥬 শাকসবজি ও কৃষি উপজাত
+
+🧂 ভিটামিন ও মিনারেল
+
+💧 সবসময় পরিষ্কারি জল
+
+---
+
+### 🐔 মুরগি | Poultry
+
+🐣 Starter Feed (0-8 সপ্তাহ)
+
+🐥 Grower Feed (8-20 সপ্তাহ)
+
+🐔 Layer Feed (ডিমপাড়া মুরগি)
+
+🌽 ভুট্টা ও সুষম খাদ্য
+
+🧂 ক্যালসিয়াম ও খনিজ
+
+💧 সার্বক্ষণিক পরিষ্কারি জল
+
+---
+
+### 🦆 হাঁস | Duck
+
+🌾 ধান, ভুট্টা ও হাঁসের ফিড
+
+🐌 শামুক ও জলজ খাদ্য
+
+🧂 খনিজ ও ভিটামিন
+
+💧 পর্যাপ্ত জল
+
+---
+
+### 🐇 খরগোশ | Rabbit
+
+🌿 নরম ঘাস ও সবুজ পাতা
+
+🥕 গাজর, শাকসবজি
+
+🥣 Rabbit Pellet Feed
+
+💧 পরিষ্কার জল
+
+---
+
+### 🐎 ঘোড়া | Horse
+
+🌿 উন্নত মানের ঘাস
+
+🌾 খড়
+
+🥣 ওটস ও দানাদার খাদ্য
+
+🧂 মিনারেল সাপ্লিমেন্ট
+
+💧 পর্যাপ্ত জল
+
+---
+
+### ⚠️ সতর্কতা | Important Warnings
+
+❌ পচা বা ফাঙ্গাসযুক্ত খাদ্য দেবেন না
+
+❌ হঠাৎ খাদ্য পরিবর্তন করবেন না
+
+❌ অপরিষ্কার পানি ব্যবহার করবেন না
+
+❌ অতিরিক্ত দানাদার খাদ্য খাওয়াবেন না
+
+✅ সুষম খাদ্য ও পরিষ্কার জল সুস্থ প্রাণীর মূল চাবিকাঠি
+""")
 # =========================================
-# MODULE 8: VACCINE PROPHYLAXIS SCHEDULER
+# VACCINATION GUIDE
 # =========================================
 
-elif menu == "Vaccination Matrix Protocol":
-    render_breadcrumb("Vaccination Schedules")
-    st.title("💉 Immunization Timelines & Prophylaxis Registers")
-    
-    v_animal = st.selectbox("Select Animal For Schedule View", ["Cow", "Goat", "Pig"])
-    
-    if v_animal == "Cow":
+elif menu == "💉 টিকা নির্দেশিকা | Vaccination Guide":
+
+    st.header("💉 টিকা নির্দেশিকা | Vaccination Guide")
+
+    animal = st.selectbox(
+        "🐾 প্রাণী নির্বাচন করুন | Select Animal",
+        [
+            "🐄 Cow",
+            "🐐 Goat",
+            "🐑 Sheep",
+            "🐖 Pig"
+        ]
+    )
+
+    if animal == "🐄 Cow":
+
+        st.subheader("🐄 Cow Vaccination Schedule")
+
         st.table({
-            "Target Pathogen Target": ["FMD (Foot and Mouth Disease)", "HS (Haemorrhagic Septicaemia)", "BQ (Black Quarter)", "Brucellosis Profile"],
-            "Recommended Execution Cadence": ["Every 6 months recurrent cycle", "Once per annum (Pre-monsoon phases)", "Once per annum cycle", "Female heifers within 4-8 month age windows"]
-        })
-    elif v_animal == "Goat":
-        st.table({
-            "Target Pathogen Target": ["PPR Disease Control", "Goat Pox Virus", "FMD Prophylaxis"],
-            "Recommended Execution Cadence": ["Once per annum interval", "Once per annum interval", "Every 6 months recurrent cycle"]
-        })
-    else:
-        st.table({
-            "Target Pathogen Target": ["Classical Swine Fever Variant", "Swine Erysipelas Organisms", "FMD Prophylaxis"],
-            "Recommended Execution Cadence": ["Once per annum baseline interval", "Once per annum baseline interval", "Every 6 months recurrent cycle"]
+            "Disease": [
+                "FMD (Foot & Mouth Disease)",
+                "HS (Haemorrhagic Septicaemia)",
+                "BQ (Black Quarter)",
+                "Brucellosis",
+                "Theileriosis (Risk Area)"
+            ],
+            "Vaccination Time": [
+                "Every 6 months",
+                "Once yearly (Before Monsoon)",
+                "Once yearly",
+                "Female calf at 4-8 months",
+                "As advised by veterinarian"
+            ]
         })
 
+        st.success("✅ Calves should receive colostrum within 2 hours of birth.")
+        st.success("✅ Deworm before vaccination whenever possible.")
+        st.success("✅ Vaccinate only healthy animals.")
+        st.info("💡 Maintain vaccine cold chain (2-8°C).")
+
+    elif animal == "🐐 Goat":
+
+        st.subheader("🐐 Goat Vaccination Schedule")
+
+        st.table({
+            "Disease": [
+                "PPR",
+                "Goat Pox",
+                "Enterotoxaemia",
+                "FMD",
+                "HS"
+            ],
+            "Vaccination Time": [
+                "Once yearly",
+                "Once yearly",
+                "Once yearly",
+                "Every 6 months",
+                "Once yearly"
+            ]
+        })
+
+        st.success("✅ Vaccinate kids after recommended age.")
+        st.success("✅ Keep newly vaccinated animals stress-free.")
+        st.success("✅ Deworm regularly.")
+        st.info("💡 Provide clean drinking water after vaccination.")
+
+    elif animal == "🐑 Sheep":
+
+        st.subheader("🐑 Sheep Vaccination Schedule")
+
+        st.table({
+            "Disease": [
+                "PPR",
+                "Sheep Pox",
+                "Enterotoxaemia",
+                "FMD",
+                "HS"
+            ],
+            "Vaccination Time": [
+                "Once yearly",
+                "Once yearly",
+                "Once yearly",
+                "Every 6 months",
+                "Once yearly"
+            ]
+        })
+
+        st.success("✅ Vaccinate before disease season.")
+        st.success("✅ Avoid overcrowding after vaccination.")
+        st.success("✅ Maintain proper nutrition.")
+        st.info("💡 Record all vaccination dates.")
+
+    elif animal == "🐖 Pig":
+
+        st.subheader("🐖 Pig Vaccination Schedule")
+
+        st.table({
+            "Disease": [
+                "Classical Swine Fever",
+                "Swine Erysipelas",
+                "FMD",
+                "Parvovirus (Breeding Animals)",
+                "Leptospirosis (Risk Area)"
+            ],
+            "Vaccination Time": [
+                "Once yearly",
+                "Once yearly",
+                "Every 6 months",
+                "As advised by veterinarian",
+                "As advised by veterinarian"
+            ]
+        })
+
+        st.success("✅ Vaccinate piglets at appropriate age.")
+        st.success("✅ Keep pens clean and dry.")
+        st.success("✅ Isolate sick animals immediately.")
+        st.info("💡 Follow veterinarian's vaccination protocol.")
+
+    st.markdown("---")
+
+    st.subheader("📌 General Vaccination Tips")
+
+    st.success("✅ Store vaccines at 2-8°C.")
+    st.success("✅ Use sterile needles and syringes.")
+    st.success("✅ Vaccinate only healthy animals.")
+    st.success("✅ Keep vaccination records.")
+    st.success("✅ Consult a veterinarian for local vaccination schedules.")
+
+    st.warning(
+        "⚠️ Vaccination schedules may vary depending on disease prevalence, region, and government guidelines."
+    )
 # =========================================
-# MODULE 9: CONTEXT-AWARE AI CHAT BOT
+# AI VETERINARY ASSISTANT
 # =========================================
 
-elif menu == "AI Veterinary Assistant Chat":
-    render_breadcrumb("AI Assistant Space")
-    st.title("🤖 Chat Workspace: Conversational Logic Engine")
-    
+elif menu == "🤖 AI পশু চিকিৎসা সহায়ক":
+
+    st.header("🤖 AI Veterinary Assistant")
+
     if "vet_chat_messages" not in st.session_state:
+
         st.session_state.vet_chat_messages = []
-        
-    chat_animal = st.selectbox("Context Isolation Target Profile", ["Cow", "Goat", "Pig", "Buffalo", "Horse"])
-    
-    if st.button("Reset Dynamic Context Frame"):
+
+    if "vet_chat_animal" not in st.session_state:
+
+        st.session_state.vet_chat_animal = None
+
+    animal = st.selectbox(
+
+        "Select Animal",
+
+        [
+            "Cow",
+            "Goat",
+            "Pig",
+            "Buffalo",
+            "Horse"
+        ]
+    )
+
+    if st.session_state.vet_chat_animal != animal:
+
+        st.session_state.vet_chat_messages = []
+        st.session_state.vet_chat_animal = animal
+
+    if st.button("Clear Chat"):
+
         st.session_state.vet_chat_messages = []
         st.rerun()
-        
-    for msg in st.session_state.vet_chat_messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
-            
-    user_query = st.chat_input("Input problem scenario descriptions here...")
-    
-    if user_query:
-        st.session_state.vet_chat_messages.append({"role": "user", "content": user_query})
+
+    for message in st.session_state.vet_chat_messages:
+
+        with st.chat_message(message["role"]):
+
+            st.markdown(message["content"])
+
+    user_problem = st.chat_input("Describe your problem")
+
+    if user_problem:
+
+        st.session_state.vet_chat_messages.append(
+            {
+                "role": "user",
+                "content": user_problem,
+            }
+        )
+
         with st.chat_message("user"):
-            st.markdown(user_query)
-            
+
+            st.markdown(user_problem)
+
         with st.chat_message("assistant"):
-            if not API_KEY:
-                st.error("Infrastructure Error: Remote token key undefined.")
-                st.stop()
+
             try:
+                if not API_KEY:
+
+                    st.error(
+                        "OpenRouter API key not found. Add API_KEY to Animal_project/.env and restart Streamlit."
+                    )
+
+                    st.stop()
+
+                system_prompt = f"""
+                If the user asks in Bengali, always reply in standard Indian Bengali.
+                Never use the word "পানি"; use "জল" or "পানীয় জল" instead.
+               
+                Use Indian Bengali medical terms and natural vocabulary.
+                You are a careful veterinary triage assistant for livestock farmers.
+                The selected animal is: {animal}.
+
+                Use the recent chat history to answer follow-up questions in context.
+
+                Important rules:
+                - Do not claim a confirmed diagnosis.
+                - Do not answer with only questions, "None", or a refusal.
+                - Always give the best practical provisional guidance from the available details.
+                - If details are limited, clearly say "Based on the limited information" and continue with likely causes and safe care steps.
+                - Prioritize emergency warning signs and when to call a veterinarian.
+                - Keep medicine advice general; do not give exact drug dosages unless a veterinarian has prescribed them.
+                - Use clear farmer-friendly language.
+                - If the farmer asks a follow-up, answer it directly using the previous context.
+                - Ask follow-up questions only after giving useful guidance.
+                - Ask at most 1 focused follow-up question, and skip it if the next step is already clear.
+            
+
+                For a new health problem, use this structure:
+                1. Quick Triage
+                2. Possible Diseases / Causes
+                3. What To Do Now
+                4. Feeding And Water
+                5. What Not To Do
+                6. When To Call A Veterinarian
+
+                For a follow-up question, do not restart the whole interview. Use the chat context and give direct next steps.
+                """
+
+                previous_messages = st.session_state.vet_chat_messages[:-1][-3:]
+                current_message = st.session_state.vet_chat_messages[-1:]
+
                 response = requests.post(
+
                     url="https://openrouter.ai/api/v1/chat/completions",
+
                     headers={
+
                         "Authorization": f"Bearer {API_KEY}",
+
                         "Content-Type": "application/json",
                     },
+
                     json={
-                        "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+
+                        "model":
+                        "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+
                         "messages": [
-                            {"role": "system", "content": f"You are a helpful livestock assistant. If answering in Bengali, use formal Indian Bengali terms. Avoid using 'পানি', use 'জল'. Target Profile: {chat_animal}."},
-                            *st.session_state.vet_chat_messages[-5:]
+                            {
+                                "role": "system",
+                                "content": system_prompt,
+                            },
+                            *previous_messages,
+                            *current_message,
                         ],
-                        "temperature": 0.3
-                    }
+                        "temperature": 0.2,
+                    },
                 )
-                res_json = response.json()
-                reply_txt = res_json["choices"][0]["message"]["content"]
-                st.markdown(reply_txt)
-                st.session_state.vet_chat_messages.append({"role": "assistant", "content": reply_txt})
+
+                response_data = response.json()
+
+                if "error" in response_data:
+
+                    api_error = response_data["error"]
+                    api_message = (
+                        api_error.get("message", api_error)
+                        if isinstance(api_error, dict)
+                        else api_error
+                    )
+
+                    st.error(
+                        f"API Error: {api_message}"
+                    )
+
+                else:
+
+                    reply = response_data[
+                        "choices"
+                    ][0]["message"]["content"]
+
+                    st.markdown(reply)
+
+                    st.session_state.vet_chat_messages.append(
+                        {
+                            "role": "assistant",
+                            "content": reply,
+                        }
+                    )
+
             except Exception as e:
-                st.error(f"Inference Pipeline Error: {e}")
+
+                st.error(f"Error: {e}")
 
 # =========================================
-# MODULE 10: METADATA & VERSION CONTROL
+# ABOUT APP
 # =========================================
 
-elif menu == "Application Infrastructure Info":
-    render_breadcrumb("Application Specifications")
-    st.title("ℹ️ Application Environment Parameters")
-    st.markdown("""
-    <div class='pro-card'>
-        <h3>Livestock App Workspace Engine — v2.5.0 (Enterprise Architecture)</h3>
-        <p><b>Visual Interface Layout:</b> Optimized Responsive Custom List Wrapper Injection System avoiding overlapping node parameters.</p>
-        <p><b>Target Form Factor Architecture:</b> Engineered to process across standardized browser matrix profiles and native Cordova/Capacitor runtime wrapper contexts.</p>
-    </div>
-    """, unsafe_allow_html=True)
+elif menu == "ℹ️ অ্যাপ সম্পর্কে | About App":
+
+    st.header("ℹ️ About App")
+
+    st.write("""
+
+    🐄 Livestock AI Assistant helps farmers:
+
+    ✅ Calculate Live Weight
+
+    ✅ Estimate Market Price
+
+    ✅ Learn Disease Information
+
+    ✅ Get Feeding Tips
+
+    ✅ AI Veterinary Support
+
+    ✅ Mobile Friendly Veterinary App
+
+    """)
